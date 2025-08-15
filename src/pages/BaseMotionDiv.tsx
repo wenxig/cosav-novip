@@ -1,12 +1,12 @@
-import { motion } from "framer-motion";
-import { ReactNode } from "react";
+import { motion } from "framer-motion"
+import { ReactNode } from "react"
 
 interface Props {
   children?: ReactNode
   // any props that come into the component
 }
-const BaseMotionDiv = ({children,...props} :Props) => {
-  
+const BaseMotionDiv = ({ children, }: Props) => {
+
   /*
   useEffect(() => {
     // 進入畫面時先滾動到頁面頂部
@@ -51,7 +51,7 @@ const BaseMotionDiv = ({children,...props} :Props) => {
     };
   }, []);
   */
-  
+
   return (
     <motion.div
       style={{
@@ -60,13 +60,13 @@ const BaseMotionDiv = ({children,...props} :Props) => {
         position: 'relative',
         overflow: 'auto'
       }}
-      initial={{opacity: 0}}
-      animate={{opacity: 1}}
-      exit={{opacity: 0}}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
     >
       {children}
     </motion.div>
-  );
+  )
 }
 
-export default BaseMotionDiv;
+export default BaseMotionDiv

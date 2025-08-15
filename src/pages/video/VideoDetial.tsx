@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react"
+import { useState, useEffect } from "react"
 import { Box, Button, CircularProgress, Typography } from "@mui/material"
 import useSWR from "swr"
 import { getVideoInfo } from "../../Shared/Api/CosApi"
 import { useParams } from "react-router-dom"
 import { ifVideoApiResponse } from "../../Shared/Api/interface/VideoInterface"
-import JoinVipButton from "../../components/video/JoinVipButton"
 import VideoTitle from "../../components/video/VideoTitle"
 import PlayerAndLineSelectBar from "../../components/video/PlayerAndLineSelectBar"
 import CosVideoPlayer from "../../components/video/CosVideoPlayer"
@@ -12,16 +11,11 @@ import CosVideoPlayer2 from "../../components/video/CosVideoPlayer2"
 import ViewerAndThanks from "../../components/video/ViewerAndThanks"
 import VideoButtonBar from "../../components/video/VideoButtonBar"
 import VideoInfo from "../../components/video/VideoInfo"
-import CosAdIFrame from "../../components/CosAdIFrame"
 import CosGridFrame from "../../components/CosGridFrame"
 import TopTitleBar from "../../components/TopTitleBar"
 import BaseMotionDiv from "../BaseMotionDiv"
-import { checkIsLogin, checkIsVip } from "../../Shared/function/AccountFunction"
-import CosCheckIsLogin from "../../components/base/check/CosCheckIsLogin"
-import CosCheckIsVip from "../../components/base/check/CosCheckIsVip"
-//import { API_DEDUPING_INTERVAL } from "../../data/ParameterDef";
+import { checkIsVip } from "../../Shared/function/AccountFunction"
 import CosRepeatedLogin from "../../components/base/check/CosRepeatedLogin"
-import CosVipOnlyFrame from "../../components/video/CosVipOnlyFrame"
 import { getSiteSetting } from "../../data/DataCenter"
 import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined"
 import { cBasePanel, cMainColor } from "../../data/ColorDef"
@@ -35,10 +29,7 @@ function VideoDetial() {
   const [playerId, setPlayerId] = useState<number>(1) // 預設為1
   const [lineIndex, setLineIndex] = useState<number>(0) // 預設為0
   const [urlAvailable, setUrlAvailable] = useState<boolean>(true)
-  const [vipOnly, setVipOnly] = useState<boolean>(false)
 
-  const [checkIsLoginOpen, setCheckIsLoginOpen] = useState(false)
-  const [checkIsVipOpen, setCheckIsVipOpen] = useState(false)
   const [checkIsRepeatedLoginOpen, setCheckIsRepeatedLoginOpen] = useState(false)
 
   const [checkIsCollectionOpen, setCheckIsCollectionOpen] = useState(false)
@@ -70,11 +61,6 @@ function VideoDetial() {
       }
       //拿API失敗
       return undefined
-    }
-
-    if (!res.data.can_play && !checkIsVip()) {
-      //非VIP無法搶先看
-      setVipOnly(true)
     }
 
     return res
@@ -123,9 +109,6 @@ function VideoDetial() {
         targetUrl = data.data.video_url[newLineIndex]
       } else {
 
-        setCheckIsLoginOpen(true)
-
-        setCheckIsVipOpen(true)
 
         // VIP線路
         const vipIndex = newLineIndex - (data.data.video_url?.length || 0)
@@ -326,10 +309,10 @@ function VideoDetial() {
         <Box sx={{ height: 20 }}></Box>
 
         {/* 檢查是否已登入 */}
-        <CosCheckIsLogin
+        {/* <CosCheckIsLogin
           open={checkIsLoginOpen}
           onCancel={() => { setCheckIsLoginOpen(false) }}
-        />
+        /> */}
 
         {/* 檢查是否已VIP */}
         {/* <CosCheckIsVip

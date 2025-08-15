@@ -108,7 +108,7 @@ function CategoriesPage() {
   };
   
   // 處理頁面變動
-  const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
+  const handlePageChange = (_event: React.ChangeEvent<unknown>, value: number) => {
     //setCurrentPage(value);
     navigate(`/categoriesPage/${currentChid}/${currentSubChid}/${value}`);
   };

@@ -6,10 +6,10 @@ import { checkIsLogin } from "../function/AccountFunction"
 type Wordarray = cryptoJs.lib.WordArray
 type getApiReason = 'success' | 'get link fail' | 'decrypt fail' | string
 
-type getResult = {
+export type getResult<T = any> = {
   result: 'success' | 'fail',
   message: string | null,
-  data: any | null
+  data?: T
 }
 
 
@@ -87,7 +87,7 @@ export class CosApiUtil {
         padding: cryptoJs.pad.Pkcs7
       })
       const result = dData.toString(cryptoJs.enc.Utf8)
-      console.log(url,data)
+      console.log(url, JSON.parse(result))
       return result
     } catch (e) {
       console.log(e)
@@ -210,7 +210,7 @@ export class CosApiUtil {
         'Tokenparam': this.genToken(),
         'userParams': getUserParams(),
       })
-      const url = `${ apiUrl }${ apiName }`
+      const url = `${apiUrl}${apiName}`
       const response = await fetch(url, {
         method: 'POST',
         headers,

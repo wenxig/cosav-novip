@@ -33,7 +33,6 @@ export interface ifQueryResult {
 const CosVideoCollection: React.FC<CosVideoCollectionProps> = ({
   group_id,
   open,
-  title='',
   onCancel=()=>{},
 }) => {
 
@@ -89,7 +88,7 @@ const CosVideoCollection: React.FC<CosVideoCollectionProps> = ({
   return (
     <Dialog
       open={open}
-      onClose={(event, reason) => {
+      onClose={(_event, reason) => {
         if (reason === 'backdropClick' || reason === 'escapeKeyDown') {
           return;
         }
