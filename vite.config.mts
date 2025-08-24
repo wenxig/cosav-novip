@@ -9,15 +9,16 @@ export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
-    // legacyPlugin({
-    //   targets: ['defaults', 'ie >= 11', 'chrome 52'],
-    //   additionalLegacyPolyfills: ['regenerator-runtime/runtime'],
-    //   renderLegacyChunks: true,
-    //   renderModernChunks: false,
-    // })
+    legacyPlugin({
+      targets: ['defaults', 'ie >= 11', 'chrome 52'],
+      additionalLegacyPolyfills: ['regenerator-runtime/runtime'],
+      renderLegacyChunks: true,
+      renderModernChunks: false,
+
+    })
   ],
   experimental: {
-    // enableNativePlugin: true
+    enableNativePlugin: true
   },
   resolve: {
     alias: {
@@ -34,5 +35,8 @@ export default defineConfig({
   base: "/",
   define: {
     process: "import.meta"
+  },
+  server: {
+    port: 6173
   }
 })

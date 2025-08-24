@@ -4,7 +4,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { HashRouter } from 'react-router-dom';
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet"></link>
-import "core-js"
+// import "core-js"
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );

@@ -42,8 +42,8 @@ export class CosApiUtil {
    */
   private async testUrl(url: string): Promise<boolean> {
     try {
-      const fatchApiUrlRes = await fetch(url)
-      if (fatchApiUrlRes.ok) {
+      const fetchApiUrlRes = await fetch(url)
+      if (fetchApiUrlRes.ok) {
         return true
       }
     } catch { }
@@ -131,7 +131,7 @@ export class CosApiUtil {
    * @returns 
    */
   public genToken = () => {
-    return "CosAppMakeBigMoney," + Math.floor(Date.now() / 1000)
+    return "CosAppMakeBigMoney," + this.genAuthId()
   }
 
   /**
