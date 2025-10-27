@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
-import { Box, Button, Typography } from '@mui/material';
-import { ifVideoBaseInfo, ifVideoFavoriteApiResponse } from '../Shared/Api/interface/VideoInterface';
-import { ifAlbumBaseInfo } from '../Shared/Api/interface/AlbumInterface';
-import { useNavigate } from 'react-router-dom';
-import CosMessageAndLoading from './base/CosMessageAndLoading';
-import { sendVideoFavorite, sendAlbumFavorite } from '../Shared/Api/CosApi';
-import { removeFavoriteAlbum, removeFavoriteVideo } from '../data/DataCenter';
+import React, { useState } from 'react'
+import { Box, Button, Typography } from '@mui/material'
+import { ifVideoBaseInfo, ifVideoFavoriteApiResponse } from '../Shared/Api/interface/VideoInterface'
+import { ifAlbumBaseInfo } from '../Shared/Api/interface/AlbumInterface'
+import { useNavigate } from 'react-router-dom'
+import CosMessageAndLoading from './base/CosMessageAndLoading'
+import { sendVideoFavorite, sendAlbumFavorite } from '../Shared/Api/CosApi'
+import { removeFavoriteAlbum, removeFavoriteVideo } from '../data/DataCenter'
 
 interface CosGridCardProps {
-  video?: ifVideoBaseInfo;
-  album?: ifAlbumBaseInfo;
-  width?: number;
-  height?: number;
-  delMode?: boolean;
-  isReplace?: boolean;
+  video?: ifVideoBaseInfo
+  album?: ifAlbumBaseInfo
+  width?: number
+  height?: number
+  delMode?: boolean
+  isReplace?: boolean
 }
 
 const CosGridCard: React.FC<CosGridCardProps> = ({
@@ -24,43 +24,47 @@ const CosGridCard: React.FC<CosGridCardProps> = ({
   delMode = false,
   isReplace = false,
 }) => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
-  const [msg, setMsg] = useState('');
-  const [msgType, setMsgType] = useState<'error' | 'success' | 'info' | 'warning'>('info');
+  const [msg, setMsg] = useState('')
+  const [msgType, setMsgType] = useState<'error' | 'success' | 'info' | 'warning'>('info')
   const setShowMsg = (msg: string, msgType: 'error' | 'success' | 'info' | 'warning') => {
-    setMsg(msg);
-    setMsgType(msgType);
+    setMsg(msg)
+    setMsgType(msgType)
   }
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false)
 
   // 將 duration 轉換為時間格式
   const formatDuration = (duration?: string) => {
-    if(!duration) 
-      return "";
-    const totalSeconds = Math.floor(parseFloat(duration));
-    const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
-    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-  };
+    if (!duration)
+      return ""
+    const totalSeconds = Math.floor(parseFloat(duration))
+    const hours = Math.floor(totalSeconds / 3600)
+    const minutes = Math.floor((totalSeconds % 3600) / 60)
+    const seconds = totalSeconds % 60
+    const stringHours = hours.toString().padStart(2, '0')
+    const base = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+    console.log(stringHours)
+    if (stringHours != '00') return `${stringHours}:${base}`
+    return base
+  }
 
   // 將十六進制顏色轉換為 rgba
   const hexToRgba = (hex: string, alpha: number = 1) => {
     // 確保 hex 格式正確
-    const hexColor = hex.startsWith('#') ? hex.substring(1) : hex;
-    const r = parseInt(hexColor.slice(0, 2), 16);
-    const g = parseInt(hexColor.slice(2, 4), 16);
-    const b = parseInt(hexColor.slice(4, 6), 16);
-    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-  };
+    const hexColor = hex.startsWith('#') ? hex.substring(1) : hex
+    const r = parseInt(hexColor.slice(0, 2), 16)
+    const g = parseInt(hexColor.slice(2, 4), 16)
+    const b = parseInt(hexColor.slice(4, 6), 16)
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`
+  }
 
-  const componentWidth = Math.min(width,document.documentElement.clientWidth) ;
-  const imageHeight = Math.min(componentWidth / 16 * 12) ;
-  const titleHeight = 45;
-  const componentHeight = imageHeight + titleHeight;
+  const componentWidth = Math.min(width, document.documentElement.clientWidth)
+  const imageHeight = Math.min(componentWidth / 16 * 12)
+  const titleHeight = 45
+  const componentHeight = imageHeight + titleHeight
   //const componentHeight = Math.min((componentWidth / 840 * 840),document.documentElement.clientHeight) ;
-  const labelFonfontSize = (width > 400) ? 18 : (width > 200)?13:10
+  const labelFonfontSize = (width > 400) ? 18 : (width > 200) ? 13 : 10
 
   const containerStyle = {
     width: componentWidth,
@@ -93,7 +97,7 @@ const CosGridCard: React.FC<CosGridCardProps> = ({
     color: 'white',
   }
 
-  const titleContainerStyle={
+  const titleContainerStyle = {
     flex: 1,
     display: 'flex',
     alignItems: 'center',
@@ -102,7 +106,7 @@ const CosGridCard: React.FC<CosGridCardProps> = ({
     padding: '0 4px',
   }
 
-  const titleStyle={
+  const titleStyle = {
     display: '-webkit-box',
     WebkitLineClamp: 2,
     WebkitBoxOrient: 'vertical',
@@ -117,78 +121,78 @@ const CosGridCard: React.FC<CosGridCardProps> = ({
     paddingBottom: '2px',
   }
 
-  if(album){
+  if (album) {
     return (
-      <Box 
-        sx={containerStyle} 
+      <Box
+        sx={containerStyle}
         onClick={() => {
-          if(isReplace){
-            navigate(`/albumDetial/${album.id}/${encodeURIComponent(album.photo)}`,{replace:true});
-          }else{
-            navigate(`/albumDetial/${album.id}/${encodeURIComponent(album.photo)}`);
+          if (isReplace) {
+            navigate(`/albumDetial/${album.id}/${encodeURIComponent(album.photo)}`, { replace: true })
+          } else {
+            navigate(`/albumDetial/${album.id}/${encodeURIComponent(album.photo)}`)
           }
         }}
       >
         {/* 圖片容器 */}
-      <Box
-        sx={{
-          position: 'relative',
-          width: {componentWidth},
-          height: `${imageHeight}px`,
-          overflow: 'hidden',
-        }}
-      >
-        {/* 模糊背景層 */}
-        <Box
-          sx={{
-            position: 'absolute',
-            width: '100%',
-            height: '100%',
-            backgroundImage: `url(${album.photo})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            filter: 'blur(2px)',
-            transform: 'scale(1.1)', // 防止模糊邊緣出現
-          }}
-        />
-        {/* 清晰前景層 */}
         <Box
           sx={{
             position: 'relative',
-            width: '100%',
-            height: '100%',
-            backgroundImage: `url(${album.photo})`,
-            backgroundSize: 'contain',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
+            width: { componentWidth },
+            height: `${imageHeight}px`,
+            overflow: 'hidden',
           }}
-        />
+        >
+          {/* 模糊背景層 */}
+          <Box
+            sx={{
+              position: 'absolute',
+              width: '100%',
+              height: '100%',
+              backgroundImage: `url(${album.photo})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              filter: 'blur(2px)',
+              transform: 'scale(1.1)', // 防止模糊邊緣出現
+            }}
+          />
+          {/* 清晰前景層 */}
+          <Box
+            sx={{
+              position: 'relative',
+              width: '100%',
+              height: '100%',
+              backgroundImage: `url(${album.photo})`,
+              backgroundSize: 'contain',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
+            }}
+          />
 
           {/* 刪除按鈕 */}
           {delMode && (
             <Button
               sx={deleteButtonStyle}
               onClick={(e) => {
-                e.stopPropagation(); // 阻止事件冒泡
+                e.stopPropagation() // 阻止事件冒泡
 
-                setIsLoading(true);
+                setIsLoading(true)
                 // 刪除相簿
                 sendAlbumFavorite(album.id).then(
-                  (res:ifVideoFavoriteApiResponse)=>{
-                    if(res.result === "success" && res.data?.status === "ok"){
-                      removeFavoriteAlbum(album.id);
-                      setShowMsg("刪除成功", 'success');
-                      window.location.reload();
+                  (res: ifVideoFavoriteApiResponse) => {
+                    if (res.result === "success" && res.data?.status === "ok") {
+                      removeFavoriteAlbum(album.id)
+                      setShowMsg("刪除成功", 'success')
+                      window.location.reload()
                       //navigate(`/my/favorite/video`,{replace:true});
-                    }else{
-                      setShowMsg("刪除失敗", 'error');
+                    } else {
+                      setShowMsg("刪除失敗", 'error')
                     }
-                    setIsLoading(false);
+                    setIsLoading(false)
                   }
-                );
-                
+                )
+
               }}
-            > 
+            >
               刪除
             </Button>
           )}
@@ -206,29 +210,29 @@ const CosGridCard: React.FC<CosGridCardProps> = ({
           isloading={isLoading}
           msgType={msgType}
           msg={msg}
-          onClose={()=>{
-            setShowMsg('', 'info');
+          onClose={() => {
+            setShowMsg('', 'info')
           }}
         />
       </Box>
-    );
+    )
   }
 
 
   // 取得頻道背景顏色，如果為 null 則使用預設值
-  const channelBgColor = video?.channel_bg_color || '#b74093';
-  const channelName = video?.channel_name ? 
-    (video.channel_name.includes("同人") ? "同人" : video.channel_name) 
-    : "";
+  const channelBgColor = video?.channel_bg_color || '#b74093'
+  const channelName = video?.channel_name ?
+    (video.channel_name.includes("同人") ? "同人" : video.channel_name)
+    : ""
 
   return (
-    <Box 
-      sx={containerStyle} 
+    <Box
+      sx={containerStyle}
       onClick={() => {
-        if(isReplace){
-          navigate(`/videoDetial/${video!.id}`,{replace:true});
-        }else{
-          navigate(`/videoDetial/${video!.id}`);
+        if (isReplace) {
+          navigate(`/videoDetial/${video!.id}`, { replace: true })
+        } else {
+          navigate(`/videoDetial/${video!.id}`)
         }
       }}
     >
@@ -236,7 +240,7 @@ const CosGridCard: React.FC<CosGridCardProps> = ({
       <Box
         sx={{
           position: 'relative',
-          width: {componentWidth},
+          width: { componentWidth },
           height: `${imageHeight}px`,
           overflow: 'hidden',
         }}
@@ -272,25 +276,25 @@ const CosGridCard: React.FC<CosGridCardProps> = ({
           <Button
             sx={deleteButtonStyle}
             onClick={(e) => {
-              e.stopPropagation(); // 阻止事件冒泡
+              e.stopPropagation() // 阻止事件冒泡
               // 刪除影片
-              setIsLoading(true);
+              setIsLoading(true)
               // 刪除影片
               sendVideoFavorite(video?.id!).then(
-                (res:ifVideoFavoriteApiResponse)=>{
-                  if(res.result === "success" && res.data?.status === "ok"){
-                    removeFavoriteVideo(video?.id!);
-                    setShowMsg("刪除成功", 'success');
+                (res: ifVideoFavoriteApiResponse) => {
+                  if (res.result === "success" && res.data?.status === "ok") {
+                    removeFavoriteVideo(video?.id!)
+                    setShowMsg("刪除成功", 'success')
                     //navigate(`/my/favorite/video/0`,{replace:true});
-                    window.location.reload();
-                  }else{
-                    setShowMsg("刪除失敗", 'error');
+                    window.location.reload()
+                  } else {
+                    setShowMsg("刪除失敗", 'error')
                   }
-                  setIsLoading(false);
+                  setIsLoading(false)
                 }
-              );
+              )
             }}
-          > 
+          >
             刪除
           </Button>
         )}
@@ -324,7 +328,7 @@ const CosGridCard: React.FC<CosGridCardProps> = ({
         </Box>
 
         {/* 合集名稱 */}
-        {video?.group_id !== '0' &&<Box
+        {video?.group_id !== '0' && <Box
           sx={{
             ...labelStyle,
             backgroundColor: hexToRgba('#413C38', 0.85),
@@ -360,15 +364,15 @@ const CosGridCard: React.FC<CosGridCardProps> = ({
 
       {/* 提示訊息 */}
       <CosMessageAndLoading
-          isloading={isLoading}
-          msgType={msgType}
-          msg={msg}
-          onClose={()=>{
-            setShowMsg('', 'info');
-          }}
-        />
+        isloading={isLoading}
+        msgType={msgType}
+        msg={msg}
+        onClose={() => {
+          setShowMsg('', 'info')
+        }}
+      />
     </Box>
-  );
-};
+  )
+}
 
-export default CosGridCard; 
+export default CosGridCard 

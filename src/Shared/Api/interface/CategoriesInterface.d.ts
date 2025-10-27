@@ -1,6 +1,9 @@
 import type { getResult } from "../CosApiUtil"
+import type { Stream } from "./VideoInterface"
 
-export type ifCategoriesApiResponse = getResult<{
+export type ifCategoriesApiResponse = getResult<ifCategoryItem[]>
+export type ifCategoriesSubApiResponse = getResult<ifCategorySubItem[]>
+export interface ifCategorySubItem {
   CHID: string
   bg_color: string
   has_sub: boolean
@@ -8,12 +11,8 @@ export type ifCategoriesApiResponse = getResult<{
   name: string
   photo: string
   slug: string
-}[]>
-export type ifCategoriesSubApiResponse = getResult<{
-  CHID: string
-  has_sub: boolean
-  name: string
-  photo: string
-  slug: string
-  total: number
-}[]>
+}
+export interface ifCategoryItem extends ifCategorySubItem {
+  bg_color: string
+  subCategories?: ifCategorySubItem[] | Stream<ifCategorySubItem>
+}

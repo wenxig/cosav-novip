@@ -37,6 +37,6 @@ export default defineConfig({
     process: "import.meta"
   },
   server: {
-    port: 6173
+    port: 1145
   }
 })
