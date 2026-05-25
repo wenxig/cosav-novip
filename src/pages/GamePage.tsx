@@ -3,6 +3,7 @@ import { Box, CircularProgress, Typography } from "@mui/material";
 
 
 import BaseMotionDiv from "./BaseMotionDiv";
+import CosAdIFrame from "../components/CosAdIFrame";
 import BottomNavBar from "../components/BottomNavBar";
 import LogoSearchBar from "../components/LogoSearchBar";
 import { useNavigate, useParams } from "react-router-dom";
@@ -78,7 +79,7 @@ function GamePage() {
   };
 
   // 處理頁面變動
-  const handlePageChange = (_event: React.ChangeEvent<unknown>, newPage: number) => {
+  const handlePageChange = (event: React.ChangeEvent<unknown>, newPage: number) => {
     setCurrentPage(newPage);
     navigate(`/game/${currentCid}/${newPage}`);
     // 滾動到頁面頂部
@@ -153,6 +154,14 @@ function GamePage() {
         <BottomNavBar page={'game'} />
         
 
+        <CosAdIFrame adType="GAME_INFO" 
+          position={{
+            position: 'fixed', 
+            bottom: 60,  
+          }}
+          closeButton={true}
+          pageName={`game`}
+        />
         
 
       </Box>

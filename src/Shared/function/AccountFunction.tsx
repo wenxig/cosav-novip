@@ -6,6 +6,8 @@ import { cBlack80 } from '../../data/ColorDef';
 import { getUserInfo, setUserInfo } from '../../data/DataCenter';
 import { sendAuthLogin } from '../Api/CosApi';
 
+
+
 export type InputType = 'account' | 'password' | 'email' | 'inviteCode';
 
 export const getIcon = (type: InputType) => {
@@ -224,5 +226,10 @@ export const checkLogin = async ()=>{
     // 更新登入資訊
     storeLoginInfo(loginInfo.account, loginInfo.password);
   }
+}
+
+
+export class tempData {
+  public static searchBackUrl: string = '/home';
 }
 

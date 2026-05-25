@@ -130,7 +130,8 @@ const FeedbackPage: React.FC = () => {
         telecom!,
         phoneModel,
         selectedFile,
-        temp_feedbackVideoData.player
+        temp_feedbackVideoData.player,
+        temp_feedbackVideoData.downloadSpeed || ''
       );
 
       //呼叫API失敗
@@ -299,12 +300,33 @@ const FeedbackPage: React.FC = () => {
           {/* 手機品牌與型號 */}
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <Typography sx={labelStyle}>手机品牌<br/>与型号:</Typography>
-            <TextField
-              fullWidth
-              value={phoneModel}
-              onChange={(e) => setPhoneModel(e.target.value)}
-              sx={inputStyle}
-            />
+            <Box sx={{ flex: 1 }}>
+              <input
+                type="text"
+                value={phoneModel}
+                onChange={(e) => setPhoneModel(e.target.value)}
+                style={{
+                  width: '100%',
+                  fontSize: '16px',
+                  minHeight: '40px',
+                  color: 'white',
+                  backgroundColor: cBasePanel,
+                  borderRadius: '10px',
+                  border: `1px solid ${cMainColor}`,
+                  padding: '8px 12px',
+                  outline: 'none',
+                  fontFamily: 'inherit'
+                }}
+                autoComplete="off"
+                autoCorrect="off"
+                autoCapitalize="off"
+                spellCheck="false"
+                inputMode="text"
+                lang="zh-TW"
+                data-ime="true"
+                data-ime-mode="active"
+              />
+            </Box>
           </Box>
 
           {/* 檔案選擇 */}
@@ -368,14 +390,37 @@ const FeedbackPage: React.FC = () => {
           {/* 留言內容 */}
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
             <Typography>留言内容</Typography>
-            <TextField
-              multiline
-              rows={4}
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              onFocus={scrollToBottom}
-              sx={{ backgroundColor: 'white' }}
-            />
+            <Box sx={{ 
+              backgroundColor: 'white', 
+              borderRadius: '4px',
+              border: '1px solid #ccc',
+              padding: '8px'
+            }}>
+              <textarea
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                onFocus={scrollToBottom}
+                rows={4}
+                style={{
+                  width: '100%',
+                  border: 'none',
+                  outline: 'none',
+                  resize: 'vertical',
+                  fontSize: '16px',
+                  fontFamily: 'inherit',
+                  backgroundColor: 'transparent',
+                  minHeight: '80px'
+                }}
+                autoComplete="off"
+                autoCorrect="off"
+                autoCapitalize="off"
+                spellCheck="false"
+                inputMode="text"
+                lang="zh-TW"
+                data-ime="true"
+                data-ime-mode="active"
+              />
+            </Box>
           </Box>
 
           {/* 驗證碼 */}
@@ -430,13 +475,30 @@ const FeedbackPage: React.FC = () => {
                 <RefreshIcon />
               </IconButton>
             </Box>
-            <TextField
-              fullWidth
+            <input
+              type="text"
               value={verificationCode}
               onChange={(e) => setVerificationCode(e.target.value)}
               onFocus={scrollToBottom}
               placeholder="请输入验证码"
-              sx={inputStyle}
+              style={{
+                width: '100%',
+                fontSize: '16px',
+                minHeight: '40px',
+                color: 'white',
+                backgroundColor: cBasePanel,
+                borderRadius: '10px',
+                border: `1px solid ${cMainColor}`,
+                padding: '8px 12px',
+                outline: 'none',
+                fontFamily: 'inherit'
+              }}
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="off"
+              spellCheck="false"
+              inputMode="numeric"
+              lang="zh-TW"
             />
           </Box>
 

@@ -1,10 +1,9 @@
-import React, {useEffect } from "react";
+import React, { useEffect } from "react";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import BaseMotionDiv from "../BaseMotionDiv";
 import useSWR from "swr";
 import { getAlbumInfo } from "../../Shared/Api/CosApi";
 import { useParams } from "react-router-dom";
-import { cBasePanel } from "../../data/ColorDef";
 import VideoTitle from "../../components/video/VideoTitle";
 import VideoInfo from "../../components/video/VideoInfo";
 import CosAdIFrame from "../../components/CosAdIFrame";
@@ -14,10 +13,10 @@ import { ifAlbumApiResponse } from "../../Shared/Api/interface/AlbumInterface";
 import AlbumCover from "../../components/album/AlbumCover";
 import ViewerAndFavorite from "../../components/album/ViewerAndFavorite";
 import { API_DEDUPING_INTERVAL } from "../../data/ParameterDef";
+import { trackerUtil } from "../../Shared/Utils/TrackerUtil";
 
 function AlbumDetial() {
-  const { albumId , photoUrl } = useParams();
-  
+  const { albumId, photoUrl } = useParams();
 
   const fetcher = async (): Promise<ifAlbumApiResponse> => {
     return await getAlbumInfo(albumId);
@@ -28,18 +27,25 @@ function AlbumDetial() {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
     dedupingInterval: API_DEDUPING_INTERVAL, // 1小時 = 3600000毫秒
-    revalidateIfStale: false
+    revalidateIfStale: false,
   });
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-  
+
+  // 上报相册观看事件
+  useEffect(() => {
+    if (albumId) {
+      trackerUtil.trackAlbumView(albumId).catch(() => {});
+    }
+  }, [albumId]);
+
   // 加載中只顯示轉圈圈
   if (isLoading) {
     return (
       <BaseMotionDiv>
-        <TopTitleBar title={'相簿详情'} />
+        <TopTitleBar title={"相簿详情"} defaultBackPath="/home" />
         <Box
           style={{
             backgroundColor: "black",
@@ -58,10 +64,9 @@ function AlbumDetial() {
 
   // 錯誤顯示
   if (error || !data || !data.data) {
-    
     return (
       <BaseMotionDiv>
-        <TopTitleBar title={'相簿详情'} />
+        <TopTitleBar title={"相簿详情"} defaultBackPath="/home" />
         <Box
           style={{
             backgroundColor: "black",
@@ -90,41 +95,46 @@ function AlbumDetial() {
           backgroundColor: "black",
           width: "100%",
           minHeight: "100%",
-          display: "grid",  
-          gap: 12,//設定子元件間距
+          display: "grid",
+          gap: 12, //設定子元件間距
         }}
       >
-        <TopTitleBar title={'相簿详情'} />
-        
-        <AlbumCover albumId={albumId!} photoUrl={photoUrl!} pageCount={apiData.total_photos}/>
+        <TopTitleBar title={"相簿详情"} defaultBackPath="/home" />
 
-
-        {/* 影片標題 */}
-        <VideoTitle title={apiData.title} backgroundColor={cBasePanel} />
-
-        
-        {/* 觀看人數 感謝廠商 */}
-        <ViewerAndFavorite 
-          viewer={apiData.total_views} 
+        <AlbumCover
           albumId={albumId!}
+          photoUrl={photoUrl!}
+          pageCount={apiData.total_photos}
         />
 
+        {/* 影片標題 */}
+        <VideoTitle title={apiData.title} backgroundColor={"black"} />
+
+        {/* 觀看人數 感謝廠商 */}
+        <ViewerAndFavorite viewer={apiData.total_views} albumId={albumId!} />
+
+        <CosAdIFrame adType="VIDEO_COVER" pageName={"albumDetial"} />
 
         <VideoInfo album={apiData} />
 
-
-
-
-        <Typography sx={{ color: "white" ,ml:2,fontSize:"22px"}}>
+        <Typography sx={{ color: "white", ml: 2, fontSize: "22px" }}>
           相关视频
         </Typography>
-        <CosGridFrame albums={apiData.related.slice(0, 4)} column={2} isReplace={true} />
+        <CosGridFrame
+          albums={apiData.related.slice(0, 4)}
+          column={2}
+          isReplace={true}
+        />
+        <CosAdIFrame adType="VIDEO_INFO" pageName={"albumDetial"} />
         {apiData.related.length > 4 && (
-          <CosGridFrame albums={apiData.related.slice(4)} column={2} isReplace={true} />
+          <CosGridFrame
+            albums={apiData.related.slice(4)}
+            column={2}
+            isReplace={true}
+          />
         )}
 
-
-        <Box sx={{height:30}}></Box>
+        <Box sx={{ height: 30 }}></Box>
       </Box>
     </BaseMotionDiv>
   );

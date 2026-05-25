@@ -47,11 +47,11 @@ function MyPage() {
           gap: 10,
         }}
       >
-        <LogoSearchBar/>
+        <LogoSearchBar backUrl="/my"/>
 
         <AccountInfo/>
         <AccountButtonList/>
-        <MainFunction/>
+        <MainFunction width={windowWidth}/>
 
         <OfficialGroup/>
         <VersionText/>

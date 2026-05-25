@@ -77,13 +77,47 @@ function CosFavoritePage() {
     return undefined;
   };
 
-  const { data, error, isLoading } = useSWR(`favoriteList${queryType}${currentPage}`, fetcher, {
+  const { data, error, isLoading, mutate } = useSWR(`favoriteList${queryType}${currentPage}`, fetcher, {
     revalidateOnFocus: true,
     revalidateOnReconnect: true,
     revalidateIfStale: true,
     dedupingInterval: 0,
     refreshInterval: 0
   });
+  
+  const handleDeletedVideo = (videoId: string) => {
+    mutate((oldData: ifQueryResult | undefined) => {
+      if (!oldData || !oldData.videoList) return oldData;
+      const newLists = oldData.videoList.lists.filter(item => item.id !== videoId);
+      const newTotal = Math.max((oldData.totalItems || 0) - 1, 0);
+      return {
+        ...oldData,
+        videoList: {
+          ...oldData.videoList,
+          lists: newLists,
+          totalCnt: (parseInt(oldData.videoList.totalCnt) - 1).toString(),
+        },
+        totalItems: newTotal,
+      };
+    }, false);
+  };
+
+  const handleDeletedAlbum = (albumId: string) => {
+    mutate((oldData: ifQueryResult | undefined) => {
+      if (!oldData || !oldData.albumList) return oldData;
+      const newLists = oldData.albumList.lists.filter(item => item.id !== albumId);
+      const newTotal = Math.max((oldData.totalItems || 0) - 1, 0);
+      return {
+        ...oldData,
+        albumList: {
+          ...oldData.albumList,
+          lists: newLists,
+          totalCnt: (parseInt(oldData.albumList.totalCnt) - 1).toString(),
+        },
+        totalItems: newTotal,
+      };
+    }, false);
+  };
   
   // 處理頁面變動
   const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
@@ -107,7 +141,7 @@ function CosFavoritePage() {
           gap: 12,//設定子元件間距
         }}
       >
-        <TopTitleBar title="我的收藏" />
+        <TopTitleBar title="我的收藏" backUrl="/my" />
         <Box sx={{ 
           display: 'flex', 
           alignItems: 'center',
@@ -178,6 +212,7 @@ function CosFavoritePage() {
             items={data.videoList.lists}
             column={2}
             delMode={true}
+            onDeletedVideo={handleDeletedVideo}
           />
         }
 
@@ -187,6 +222,7 @@ function CosFavoritePage() {
             albums={data.albumList.lists}
             column={2}
             delMode={true}
+            onDeletedAlbum={handleDeletedAlbum}
           />
         }
         

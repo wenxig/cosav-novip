@@ -1,6 +1,5 @@
-
-import {  Button } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const CosForgetPasswordButton: React.FC = () => {
   //const windowWidth = document.documentElement.clientWidth;
@@ -9,15 +8,15 @@ const CosForgetPasswordButton: React.FC = () => {
   return (
     <Button
       sx={{
-        color: 'black',
-        fontWeight: 'bold',
-        textTransform: 'none',
+        color: "white",
+        fontWeight: "bold",
+        textTransform: "none",
       }}
-      onClick={() => navigate('/forgetPwd')}
+      onClick={() => navigate("/forgetPwd")}
     >
       Forget Password?
     </Button>
   );
 };
 
-export default CosForgetPasswordButton; 
+export default CosForgetPasswordButton;

@@ -4,7 +4,6 @@ import CosGridCard from './CosGridCard';
 import { ifVideoBaseInfo } from '../Shared/Api/interface/VideoInterface';
 import { ifAlbumBaseInfo } from '../Shared/Api/interface/AlbumInterface';
 
-
 interface CosGridFrameProps {
   width?: number;
   column?: number;
@@ -13,6 +12,9 @@ interface CosGridFrameProps {
   albums?: ifAlbumBaseInfo[];
   delMode?: boolean;
   isReplace?: boolean;
+  onDeletedVideo?: (videoId: string) => void;
+  onDeletedAlbum?: (albumId: string) => void;
+  onClickDeleteVideo?: (videoId: string) => void;
 }
 
 const CosGridFrame: React.FC<CosGridFrameProps> = ({
@@ -23,6 +25,9 @@ const CosGridFrame: React.FC<CosGridFrameProps> = ({
   albums,
   delMode = false,
   isReplace = false,
+  onDeletedVideo,
+  onDeletedAlbum,
+  onClickDeleteVideo,
 }) => {
   // 計算每個卡片的寬度（考慮間距）
   const gap = 10; // 元件間距
@@ -33,13 +38,15 @@ const CosGridFrame: React.FC<CosGridFrameProps> = ({
 
   // 根據 maxShowAmount 決定要顯示的項目
   const displayItems = maxShowAmount ? items?.slice(0, maxShowAmount) : items;
-  const displayAlbums = maxShowAmount ? albums?.slice(0, maxShowAmount) : albums;
+  const displayAlbums = maxShowAmount
+    ? albums?.slice(0, maxShowAmount)
+    : albums;
 
   const itemStyle = {
     width: cardWidth,
     height: cardHeight,
     mt: 1,
-  }
+  };
 
   return (
     <Box
@@ -59,33 +66,38 @@ const CosGridFrame: React.FC<CosGridFrameProps> = ({
         }}
       >
         {/* 顯示影片列表 */}
-        {displayItems&&displayItems.map((item, index) => (
-          <Box key={index} sx={itemStyle} >
-            <CosGridCard
-              video={item}
-              width={cardWidth}
-              height={cardHeight}
-              delMode={delMode}
-              isReplace={isReplace}
-            />
-          </Box>
-        ))}
+        {displayItems &&
+          displayItems.map((item, index) => (
+            <Box key={index} sx={itemStyle}>
+              <CosGridCard
+                video={item}
+                width={cardWidth}
+                height={cardHeight}
+                delMode={delMode}
+                isReplace={isReplace}
+                onDeletedVideo={onDeletedVideo}
+                onClickDeleteVideo={onClickDeleteVideo}
+              />
+            </Box>
+          ))}
 
         {/* 顯示相簿列表 */}
-        {displayAlbums&&displayAlbums.map((album, index) => (
-          <Box key={index} sx={itemStyle} >
-            <CosGridCard
-              album={album}
-              width={cardWidth}
-              height={cardHeight}
-              delMode={delMode}
-              isReplace={isReplace}
-            />
-          </Box>
-        ))}
+        {displayAlbums &&
+          displayAlbums.map((album, index) => (
+            <Box key={index} sx={itemStyle}>
+              <CosGridCard
+                album={album}
+                width={cardWidth}
+                height={cardHeight}
+                delMode={delMode}
+                isReplace={isReplace}
+                onDeletedAlbum={onDeletedAlbum}
+              />
+            </Box>
+          ))}
       </Box>
     </Box>
   );
 };
 
-export default CosGridFrame; 
+export default CosGridFrame;

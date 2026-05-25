@@ -28,11 +28,17 @@ const CosNewVersion: React.FC<CosNewVersionProps> = ({
     window.open(downloadUrl, '_blank');
   };
 
+  const handleUpdateClick2 = () => {
+    // 另開指定URL
+    window.open(downloadUrl2, '_blank');
+  };
+
   const siteSettingData = getSiteSetting();
   const currentVersion = packageJson.version;
   const latestVersion = siteSettingData.react_version ?? siteSettingData.version;
   const versionInfo = siteSettingData.react_version_info ?? siteSettingData.version_info;
   const downloadUrl = siteSettingData.download_url;
+  const downloadUrl2 = siteSettingData.download_url2;
 
   return (
     <Dialog
@@ -147,7 +153,29 @@ const CosNewVersion: React.FC<CosNewVersionProps> = ({
                 minWidth: '200px'
               }}
             >
-              版本更新
+              下載點1
+            </Button>
+
+            <Button
+              variant="contained"
+              onClick={handleUpdateClick2}
+              sx={{
+                backgroundColor: cMainColor,
+                color: 'white',
+                fontSize: '16px',
+                fontWeight: 600,
+                padding: '12px 32px',
+                borderRadius: '8px',
+                textTransform: 'none',
+                marginTop: '12px',
+                '&:hover': {
+                  backgroundColor: cMainColor,
+                  opacity: 0.9,
+                },
+                minWidth: '200px'
+              }}
+            >
+              下載點2
             </Button>
             
         </DialogContent>

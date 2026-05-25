@@ -1,111 +1,109 @@
 import { Box, Typography } from "@mui/material";
 import { getCategories } from "../../data/DataCenter";
-import FiberNewIcon from '@mui/icons-material/FiberNew';
-import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
-import { cMainColor, cBasePanel } from "../../data/ColorDef";
+import { cMainColor } from "../../data/ColorDef";
 import { ifCategoryItem } from "../../Shared/Api/interface/CategoriesInterface";
 import { useNavigate } from "react-router-dom";
 
-const MyNavButton:React.FC<ifCategoryItem>=(category:ifCategoryItem)=>{
-    const navigate = useNavigate();
-    const iconSytle = {
-        width: 28,
-        height: 26,
-        color: cMainColor,
-        marginBottom: '-4px',
-        marginTop: '2px'
-    }
-    return (
+const MyNavButton: React.FC<ifCategoryItem> = (category: ifCategoryItem) => {
+  const navigate = useNavigate();
+  const customIcons: Record<string, string> = {
+    cos: "/icons/cos.png",
+    hot: "/icons/hot.png",
+    new: "/icons/new.png",
+    "8": "/icons/fc2.png",
+    "2": "/icons/av.png",
+    "1": "/icons/doujin.png",
+  };
+  const iconUrl =
+    customIcons[category.CHID] || category.icon || category.photo || undefined;
+  return (
+    <Box
+      onClick={() => {
+        navigate(`/categoriesPage/${category.CHID}/0`);
+      }}
+      key={category.CHID}
+      sx={{
+        width: "100%",
+        height: "100%",
+        textAlign: "center",
+        borderRadius: "8px",
+        backgroundColor: "#090909ff",
+        borderColor: cMainColor,
+        borderWidth: "1px",
+        borderStyle: "solid",
+        cursor: "pointer",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        "&:hover": {
+          backgroundColor: "#f5f5f5",
+        },
+      }}
+    >
+      <Typography
+        noWrap
+        sx={{
+          fontSize: "13px",
+          fontWeight: "700",
+          color: cMainColor,
+          marginTop: "6px",
+          paddingLeft: "12px",
+        }}
+      >
+        {category.name}
+      </Typography>
+
+      {iconUrl && (
         <Box
-            onClick={()=>{
-                navigate(`/categoriesPage/${category.CHID}/0`);
-            }}
-            key={category.CHID}
-            sx={{
-                flex: 1,
-                textAlign: 'center',
-                textDecoration: 'none',
-                color: '#333',
-                padding: '0px',
-                margin: '0px',
-                minWidth: 0,
-                //border: '1px solid rgba(224, 224, 224, 0.15)',
-                borderRadius: '4px',
-                '&:hover': {
-                  backgroundColor: '#e0e0e0',
-                  borderRadius: '4px',
-                },
-            }}
+          sx={{
+            width: 32,
+            height: 32,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            padding: "8px",
+          }}
         >
-            {category.icon && (
-                <Box
-                    sx={{
-                        width: 24,
-                        height: 24,
-                        WebkitMaskImage: `url(${category.icon})`,
-                        maskImage: `url(${category.icon})`,
-                        WebkitMaskSize: 'contain',
-                        maskSize: 'contain',
-                        WebkitMaskRepeat: 'no-repeat',
-                        maskRepeat: 'no-repeat',
-                        WebkitMaskPosition: 'center',
-                        maskPosition: 'center',
-                        backgroundColor: cMainColor,
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        margin: '0 auto',
-                        padding: '2px 0px',
-                    }}
-                />
-            )}
-            {category.iconData==="FiberNewIcon"&&(<FiberNewIcon sx={iconSytle} />)}
-            {category.iconData==="LocalFireDepartmentIcon"&&(<LocalFireDepartmentIcon sx={iconSytle} />)}
-            <Typography 
-                noWrap
-                sx={{
-                    fontSize: '13px',
-                    fontWeight: '800',
-                    color: cMainColor,
-                    padding: '0px 0px',
-                    margin: '0px',
-                }}
-            >
-                {category.name}
-            </Typography>
+          <img
+            src={iconUrl}
+            alt={category.name}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "contain",
+            }}
+          />
         </Box>
-    )
-}
+      )}
+    </Box>
+  );
+};
 
 interface HomeNavBarProps {
-    width?: number;
+  width?: number;
 }
-
-
 
 const HomeNavBar: React.FC<HomeNavBarProps> = ({ width = 1024 }) => {
-    return (
-        <Box
-            component="div"
-            sx={{
-                width: width,
-                display: 'flex',
-                flexDirection: 'row',
-                backgroundColor: cBasePanel,
-                borderRadius: '4px',
-                padding: '4px',
-                margin: '0px',
-                overflowX: 'auto',
-                boxSizing: 'border-box',
-            }}
-        >
-            {
-                getCategories().filter((item:ifCategoryItem) => item.CHID !== "exclusive").map((item:ifCategoryItem) => (  
-                    <MyNavButton key={item.CHID} {...item} /> 
-                ))
-            }
-        </Box>
-    )
-}
+  return (
+    <Box
+      component="div"
+      sx={{
+        width: width,
+        display: "grid",
+        gridTemplateColumns: "repeat(3, minmax(0, 1fr))", // 每排 3 個
+        gap: "12px", // 間距
+        borderRadius: "8px",
+        boxSizing: "border-box",
+        padding: "12px",
+      }}
+    >
+      {getCategories()
+        .filter((item: ifCategoryItem) => item.CHID !== "exclusive")
+        .map((item: ifCategoryItem) => (
+          <MyNavButton key={item.CHID} {...item} />
+        ))}
+    </Box>
+  );
+};
 
 export default HomeNavBar;

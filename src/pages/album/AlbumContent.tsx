@@ -148,7 +148,7 @@ function AlbumContent() {
   return (
     <BaseMotionDiv>
       <Box>
-        <TopTitleBar title={'相簿內容'} />
+        <TopTitleBar title={'相簿內容'} defaultBackPath="/home" />
         
         <Box 
           sx={{ 

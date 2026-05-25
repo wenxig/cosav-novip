@@ -10,7 +10,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import BaseMotionDiv from "../../BaseMotionDiv";
 import CosGridFrame from "../../../components/CosGridFrame";
 import CosPagination from "../../../components/base/CosPagination";
-import { API_DEDUPING_INTERVAL, pEachPageCount } from "../../../data/ParameterDef";
+import { pEachPageCount } from "../../../data/ParameterDef";
 import { getAuthViewAlbumLists, getAuthViewVideoLists } from "../../../Shared/Api/CosApi";
 import { ifAuthFavoriteAlbum, ifAuthFavoriteVideo } from "../../../Shared/Api/interface/AuthInterface";
 
@@ -81,8 +81,9 @@ function CosViewPage() {
   const { data, error, isLoading } = useSWR(`viewList${queryType}${currentPage}`, fetcher, {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
-    dedupingInterval: API_DEDUPING_INTERVAL, // 半小時 
-    revalidateIfStale: false
+    dedupingInterval: 0, // 每次都重新查詢
+    revalidateIfStale: true,
+    revalidateOnMount: true
   });
   
   // 處理頁面變動
@@ -104,7 +105,7 @@ function CosViewPage() {
           gap: 12,//設定子元件間距
         }}
       >
-        <TopTitleBar title="观看记录" />
+        <TopTitleBar title="观看记录" backUrl="/my" />
         <Box sx={{ 
           display: 'flex', 
           alignItems: 'center',

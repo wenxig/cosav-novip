@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, IconButton, Typography } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { cBasePanel, cMainColor } from '../data/ColorDef';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
@@ -8,26 +8,56 @@ interface TopTitleBarProps {
   title: string;
   backUrl?: string;
   onBackClick?: () => void;
+  defaultBackPath?: string; // 當沒有 state.from 時的預設返回路徑
 }
 
 const TopTitleBar: React.FC<TopTitleBarProps> = ({ 
   title = '', 
   backUrl,
-  onBackClick = () => {}
+  onBackClick = () => {},
+  defaultBackPath = '/home'
 }) => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const containerHeight = 60;
 
   const windowWidth = document.documentElement.clientWidth;
+  const nowHistoryLength = window.history.length;
   
   // 處理返回按鈕點擊
   const handleBackClick = () => {
+    document.body.focus();
     onBackClick();
+    
     if (backUrl) {
+      // 如果指定了固定的返回路徑，直接使用
       navigate(backUrl);
     } else {
-      navigate(-1); // 返回上一頁
+/**
+ *       //navigate(-1); // 返回上一頁
+      if(window.history.length > nowHistoryLength){//因橫向轉時,會導致history長度增加(iframe原因)
+        navigate((nowHistoryLength - window.history.length)*2);
+        setTimeout(()=>{
+          navigate(-1);
+        }, 250);
+  
+      }else{
+ * 
+*/
+      if(window.history.length > nowHistoryLength){
+        // 檢查是否有從前一頁傳來的路徑
+        const from = location.state?.from;
+        if (from) {
+          // 有記錄的來源頁面，導航回去
+          navigate(from);
+        } else {
+          // 沒有記錄，使用預設路徑
+          navigate(defaultBackPath);
+        }
+      }else{
+        navigate(-1);
+      }
     }
   };
   

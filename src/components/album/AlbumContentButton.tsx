@@ -1,6 +1,6 @@
-import React from 'react';
-import { Button, Typography, SvgIconProps } from '@mui/material';
-import { cBasePanel, cMainColor, cWhite60 } from '../../data/ColorDef';
+import React from "react";
+import { Button, Typography, SvgIconProps } from "@mui/material";
+import { cMainColor, cWhite60 } from "../../data/ColorDef";
 
 interface AlbumContentButtonProps {
   icon: React.ReactElement<SvgIconProps>;
@@ -21,44 +21,36 @@ const AlbumContentButton: React.FC<AlbumContentButtonProps> = ({
   fontSize = 16,
   onClick,
 }) => {
-
   // 按鈕通用樣式
   const buttonStyle = {
-    backgroundColor: cBasePanel,
-    color: 'white',
+    backgroundColor: "black",
+    color: "white",
     borderRadius: 1,
     minWidth: minWidth,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
     gap: 0.25,
   };
 
   const iconStyle = {
     width: iconSize,
     height: iconSize,
-    color: 'white',
+    color: "white",
   };
 
   const fontStyle = {
     fontSize: fontSize,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   };
 
-
   return (
-    <Button
-      onClick={onClick}
-      sx={buttonStyle}
-    >
-      {
-        React.cloneElement(
-          icon, 
-          {sx: { ...iconStyle, color: isEnable ? cMainColor : cWhite60 } }
-        )
-      }
-      <Typography 
+    <Button onClick={onClick} sx={buttonStyle}>
+      {React.cloneElement(icon, {
+        sx: { ...iconStyle, color: isEnable ? cMainColor : cWhite60 },
+      })}
+      <Typography
         sx={{
           ...fontStyle,
           color: isEnable ? cMainColor : cWhite60,
@@ -70,4 +62,4 @@ const AlbumContentButton: React.FC<AlbumContentButtonProps> = ({
   );
 };
 
-export default AlbumContentButton; 
+export default AlbumContentButton;

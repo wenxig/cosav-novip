@@ -1,13 +1,15 @@
 import React, { useEffect, useState} from 'react';
-import useSWR, { mutate } from 'swr';
+import useSWR from 'swr';
 import { CircularProgress, Box } from '@mui/material';
 import { getSiteAdtemplate } from '../Shared/Api/CosApi';
 import { cMainColor } from '../data/ColorDef';
+import { useNavigate } from 'react-router-dom';
 //import { API_DEDUPING_INTERVAL } from '../data/ParameterDef';
 
 export type AdType = 
   | 'APP_FULL_AD_UP'
   | 'APP_FULL_AD_down'
+  | 'APP_FULL_AD_over_down'
   | 'INDEX_VIEW'
   | 'INDEX_VIEW2'
   | 'INDEX_EVENT'
@@ -24,6 +26,9 @@ export type AdType =
 export const AD_DATA = {
   APP_FULL_AD_UP: {name: "app_full_ad_up", w: 300, h: 250 },
   APP_FULL_AD_down: {name: "app_full_ad_down", w: 300, h: 250 },
+  APP_FULL_AD_over_down: {name: "app_full_ad_over_down", w: 300, h: 100 },
+
+
   INDEX_VIEW: {name: "index_view", w: 600, h: 800 },
   INDEX_VIEW2: {name: "index_view_2", w: 600, h: 800 },
   INDEX_EVENT: {name: "index_event", w: 300, h: 100 },
@@ -37,8 +42,8 @@ export const AD_DATA = {
   ALBUM_COVER: {name: "album_cover", w: 900, h: 210 },
   //ALBUM_INFO: {name: "album_info", w: 300, h: 100 },
   ALBUM_INFO: {name: "album_info", w: 900, h: 210 },
-  PLAYER_VIEW: {name: "player_view", w: 500, h: 250 },
-  PLAYER_BUFFER: {name: "player_view", w: 500, h: 250 },
+  PLAYER_VIEW: {name: "player_view", w: 500, h: 280 },
+  PLAYER_BUFFER: {name: "player_view", w: 500, h: 280 },
   GAME_INFO: {name: "index_info", w: 900, h: 210 },
 } as const;
 
@@ -62,6 +67,7 @@ const CosAdIFrame: React.FC<CosAdIFrameProps> = ({
   pageName
 }) => {
   const adData = AD_DATA[adType];
+  const navigate = useNavigate();
 
   const maxHeight = document.documentElement.clientHeight;
   const [isShowAd, setIsShowAd] = useState(true);
@@ -75,29 +81,27 @@ const CosAdIFrame: React.FC<CosAdIFrameProps> = ({
     }
   };
 
-  console.log("***************"+pageName);
-
   //取得螢幕寬度和高度
   let componentWidth = Math.min(width, adData.w, limit.width ?? 9999);
   let componentHeight = Math.min(maxHeight,adData.h,componentWidth * adData.h / adData.w, limit.height ?? 9999);
   componentWidth = componentHeight * adData.w / adData.h;
-
 
   const fetcher = async (apiName: string) => {
     const res = await getSiteAdtemplate(apiName);
     return res.data;
   };
 
-  // 創建唯一的快取鍵，包含頁面名稱和廣告類型
-  const cacheKey = pageName ? `${adData.name}_${pageName}` : adData.name;
+  // 依 adType 建立快取鍵，相同 adType 共用暫存，有暫存時直接使用不重新請求
+  const cacheKey = adData.name;
   
   const { data: adDataList, error, isLoading: isUrlLoading } = useSWR(
     cacheKey, 
-    () => fetcher(adData.name), // 使用箭頭函數包裝，傳遞不同的參數
+    () => fetcher(adData.name),
     {
-      revalidateOnFocus: false,//不會因為視窗焦點變化而重新獲取數據
-      revalidateOnReconnect: false,//不會因為網路重連而重新獲取數據
-      dedupingInterval: 0, // 0表示不暫存，每次都重新獲取
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      revalidateIfStale: false, // 有暫存時不重新驗證
+      dedupingInterval: 10 * 60 * 1000, // 10 分鐘內使用暫存，不重新請求
       //revalidateIfStale: false, // 如果資料過期不重新獲取
       //refreshInterval: 0, // 不自動重新獲取
       onSuccess: (data) => {
@@ -200,7 +204,6 @@ const CosAdIFrame: React.FC<CosAdIFrameProps> = ({
           <div style="width: ${componentWidth}px; height: ${componentHeight}px;object-fit: scale-down;text-align: center;">
           ${bodyContent || ''}
           </div>
-          
         </body>
       </html>
     `;
@@ -216,16 +219,25 @@ const CosAdIFrame: React.FC<CosAdIFrameProps> = ({
     return URL.createObjectURL(blob);
   }, [iframeHtml]);
 
+  const shouldRedirectToSponsor = React.useMemo(() => {
+    if (!iframeHtml) return false;
+    return iframeHtml.includes('COS_GOTO_SPONSOR_PAGE');
+  }, [iframeHtml]);
+
+  const handleSponsorClick = React.useCallback(() => {
+    if (shouldRedirectToSponsor) {
+      navigate('/sponsor');
+    }
+  }, [shouldRedirectToSponsor, navigate]);
+
   const [isIframeLoading, setIsIframeLoading] = useState(true);
 
-  // 組件卸載時的清理
+  // 組件卸載時的清理（保留 SWR 暫存，供同 adType 的其他實例使用）
   useEffect(() => {
     return () => {
       isMountedRef.current = false;
-      // 強制清理 useSWR 快取
-      mutate(cacheKey, undefined, false);
     };
-  }, [cacheKey]);
+  }, []);
 
   // 清理 Blob URL
   useEffect(() => {
@@ -269,11 +281,11 @@ const CosAdIFrame: React.FC<CosAdIFrameProps> = ({
 
   const closeButtonStyle = {
     position: 'absolute' as const,
-    top: '5px',
+    top: '0px',
     right: '10px',
     zIndex: 10,
-    width: '24px',
-    height: '24px',
+    width: '20px',
+    height: '20px',
     backgroundColor: 'rgba(0, 0, 0, 0.7)',
     color: 'white',
     border: 'none',
@@ -291,7 +303,7 @@ const CosAdIFrame: React.FC<CosAdIFrameProps> = ({
 
   const adIconButtonStyle = {
     position: 'absolute' as const,
-    top: '5px',
+    top: componentHeight > 700 ? '10px' : '15px',
     left: '10px',
     zIndex: 10,
     width: '24px',
@@ -367,6 +379,17 @@ const CosAdIFrame: React.FC<CosAdIFrameProps> = ({
           AD
         </Box>
       )}
+      {shouldRedirectToSponsor && (
+        <Box
+          sx={{
+            position: 'absolute',
+            inset: 0,
+            zIndex: 5,
+            cursor: 'pointer'
+          }}
+          onClick={handleSponsorClick}
+        />
+      )}
       {iframeSrc && (
         <iframe
           title={adData.name}
@@ -376,6 +399,8 @@ const CosAdIFrame: React.FC<CosAdIFrameProps> = ({
           height={componentHeight}
           onLoad={() => setIsIframeLoading(false)}
           onError={() => setIsIframeLoading(false)}
+          allow="autoplay; encrypted-media"
+          sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-top-navigation-by-user-activation"
         />
       )}
     </Box>

@@ -68,6 +68,8 @@ const SponsorCaseDialog: React.FC<CosConfirmDialogProps> = ({
     }
   };
 
+  console.log('pfunc', pfunc);
+
   return (
     <Dialog
       open={open}
@@ -125,6 +127,9 @@ const SponsorCaseDialog: React.FC<CosConfirmDialogProps> = ({
 
           <DialogContentText sx={{ color: 'black',fontSize: '14px'}}>
             帐单不会显示任何成人讯息，本站采SSL安全交易验证
+          </DialogContentText>
+          <DialogContentText sx={{ color: 'red',fontSize: '14px'}}>
+            充值完成后，请重启APP
           </DialogContentText>
 
           {/* 支付方式按鈕 */}

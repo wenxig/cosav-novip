@@ -119,7 +119,7 @@ function ChangePasswordPage() {
           justifyContent: 'center',
         }}
       >
-        <TopTitleBar title="变更密码" />
+        <TopTitleBar title="变更密码" backUrl="/my/account" />
 
         <Box sx={{ 
           display: 'flex', 

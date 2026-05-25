@@ -24,12 +24,12 @@ const SwiperAdBanner: React.FC<SwiperAdBannerProps> = ({
   //height = 300,
 }) => {
   let componentWidth = Math.min(width-20,850) ;
-  let componentHeight = componentWidth / 850 * 260;
+  let componentHeight = componentWidth / 850 * 290;
 
   //保証高度只占畫面的1/3
   if(componentHeight > document.documentElement.clientHeight / 3){
     componentHeight = document.documentElement.clientHeight / 3;
-    componentWidth = componentHeight * 850 / 260;
+    componentWidth = componentHeight * 850 / 290;
   }
 
   const handleImageClick = (link: string) => {

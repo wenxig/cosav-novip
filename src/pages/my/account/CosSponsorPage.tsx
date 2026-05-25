@@ -49,7 +49,7 @@ function CosSponsorPage() {
           gap: 12,
         }}
       >
-        <TopTitleBar title="贊助紀錄" />
+        <TopTitleBar title="贊助紀錄" backUrl="/my" />
         
         <Box sx={{ 
           display: 'flex', 

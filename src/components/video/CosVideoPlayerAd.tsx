@@ -9,7 +9,7 @@ interface CosVideoPlayerAdProps {
 }
 
 const CosVideoPlayerAd: React.FC<CosVideoPlayerAdProps> = ({
-  adSec = 0,
+  adSec = 15,
 }) => {
   const [countdown, setCountdown] = useState(adSec);
 
@@ -58,9 +58,10 @@ const CosVideoPlayerAd: React.FC<CosVideoPlayerAdProps> = ({
     <>
       {countdown > 0 && (
         <Box sx={adBoxStyle}>
+          <CosAdIFrame adType="PLAYER_VIEW" pageName={'videoPlayerAd'}/>
           <Box sx={adTextBarStyle}>
             <Typography variant="h6" sx={{color:'white'}}>
-              广告播放中，加入VIP可略过广告
+              广告播放中，加入VIP可略过
             </Typography>
             <CircularProgressWithValue nowProgress={countdown} maxProgress={adSec}/>
           </Box>

@@ -13,22 +13,26 @@ import CosBackButton from "../../components/login/CosBackButton";
 import CosMessageAndLoading from "../../components/base/CosMessageAndLoading";
 
 function CosForgetPwdPage() {
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
 
-  const [msg, setMsg] = useState('');
-  const [msgType, setMsgType] = useState<'error' | 'success' | 'info' | 'warning'>('info');
-  const setShowMsg = (msg: string, msgType: 'error' | 'success' | 'info' | 'warning') => {
+  const [msg, setMsg] = useState("");
+  const [msgType, setMsgType] = useState<
+    "error" | "success" | "info" | "warning"
+  >("info");
+  const setShowMsg = (
+    msg: string,
+    msgType: "error" | "success" | "info" | "warning"
+  ) => {
     setMsg(msg);
     setMsgType(msgType);
-  }
+  };
   const [isLoading, setIsLoading] = useState(false);
-
 
   const handleToggleConfirmPassword = async () => {
     // 檢查E-MAIL是否有效
     const emailError = validateEmail(email);
-    if (emailError !== '') {
-      setShowMsg(emailError, 'error');
+    if (emailError !== "") {
+      setShowMsg(emailError, "error");
       return;
     }
 
@@ -37,21 +41,21 @@ function CosForgetPwdPage() {
       const res = await sendAuthForget(email);
 
       //呼叫API失敗
-      if (res.result !== 'success' || !res.data) {
-        setShowMsg('发送失败，请稍后重试', 'error');
+      if (res.result !== "success" || !res.data) {
+        setShowMsg("发送失败，请稍后重试", "error");
         return;
       }
 
       //API回傳失敗訊息
-      if (res.data.status.includes('fail')) {
-        setShowMsg(res.data.msg.join(','), 'error');
+      if (res.data.status.includes("fail")) {
+        setShowMsg(res.data.msg.join(","), "error");
         return;
       }
 
       //API回傳成功訊息
-      setShowMsg('发送成功', 'success');
+      setShowMsg("发送成功", "success");
     } catch (error) {
-      setShowMsg('发送失败，请稍后重试', 'error');
+      setShowMsg("发送失败，请稍后重试", "error");
     } finally {
       setIsLoading(false);
     }
@@ -71,16 +75,19 @@ function CosForgetPwdPage() {
         />
         <CosWhiteCardBox>
           <CosBackButton />
-          
+
           {/* E-MAIL輸入框 */}
-          <CosInputField 
+          <CosInputField
             value={email}
             title="请输入Email(非帳號)"
             setValue={setEmail}
             inputType="email"
           />
 
-          <Typography variant="h6" sx={{ color: "#000" ,fontSize:16,textAlign:'center'}}>
+          <Typography
+            variant="h6"
+            sx={{ color: "white", fontSize: 16, textAlign: "center" }}
+          >
             请输入注册时的Email，系统将会发送密码至您的Email信箱
           </Typography>
 
@@ -90,10 +97,9 @@ function CosForgetPwdPage() {
             onClick={handleToggleConfirmPassword}
             background={cMainColor}
           />
-
         </CosWhiteCardBox>
         {/* 建立一個間距讓元件往上移動 */}
-        <Box sx={{height: 50}}/>
+        <Box sx={{ height: 50 }} />
       </CosGradientBox>
 
       {/* 訊息與載入中遮罩 */}
@@ -101,8 +107,8 @@ function CosForgetPwdPage() {
         isloading={isLoading}
         msgType={msgType}
         msg={msg}
-        onClose={()=>{
-          setShowMsg('', 'info');
+        onClose={() => {
+          setShowMsg("", "info");
         }}
       />
     </BaseMotionDiv>

@@ -1,12 +1,9 @@
-import React from 'react';
-import Box from '@mui/material/Box';
-
+import React from "react";
+import Box from "@mui/material/Box";
 
 interface CosWhiteCardBoxProps {
   children: React.ReactNode;
 }
-
-
 
 const CosWhiteCardBox: React.FC<CosWhiteCardBoxProps> = ({ children }) => {
   const windowWidth = document.documentElement.clientWidth;
@@ -19,19 +16,19 @@ const CosWhiteCardBox: React.FC<CosWhiteCardBoxProps> = ({ children }) => {
 
   return (
     <Box
-    sx={{
-      backgroundColor: 'white',
-      borderRadius: 10,
-      width: windowWidth * 0.75,
-      maxWidth: 400,
-      minHeight: 100,
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'left',
-      justifyContent: 'center',
-      padding: 3,
-      gap: 2,
-    }}
+      sx={{
+        backgroundColor: "#333",
+        borderRadius: 10,
+        width: windowWidth * 0.75,
+        maxWidth: 400,
+        minHeight: 100,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "left",
+        justifyContent: "center",
+        padding: 3,
+        gap: 3,
+      }}
     >
       {/* 返回按鈕 */}
       {/*
@@ -55,4 +52,4 @@ const CosWhiteCardBox: React.FC<CosWhiteCardBoxProps> = ({ children }) => {
   );
 };
 
-export default CosWhiteCardBox; 
+export default CosWhiteCardBox;

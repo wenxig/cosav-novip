@@ -23,10 +23,16 @@ const fetcher = async (): Promise<DeviceInfo> => {
   await CosApiUtil.getInstance().getApiUrl();
 
   // 模擬 API 延遲
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+  await new Promise((resolve) => setTimeout(resolve, 500));
 
   // 使用現代的 User-Agent Client Hints API
-  const userAgentData = (navigator as any).userAgentData;
+  let userAgentData;
+  try {
+    userAgentData = (navigator as any).userAgentData;
+  } catch (error) {
+    console.warn('無法取得 User-Agent Client Hints API 資訊:', error);
+    userAgentData = null;
+  }
   
   return {
     userAgent: navigator.userAgent,
@@ -56,10 +62,14 @@ const CheckDevice: React.FC = () => {
 
       if (isIOS) {
         setDeviceType("APPLE");
-        navigate("/init");
+        setTimeout(() => {
+          navigate("/init");
+        }, 500);
       } else if (isAndroid) {
         setDeviceType("ANDROID");
-        navigate("/init");
+        setTimeout(() => {
+          navigate("/init");
+        }, 500);
       } else {
         setDeviceType("OTHER");
       }
@@ -125,7 +135,7 @@ const CheckDevice: React.FC = () => {
       <Box sx={containerStyle}>
         <Paper sx={paperStyle}>
           <Typography color="error" variant="h6">
-            發生錯誤：{error.message}
+            无法辨识装置资讯
           </Typography>
         </Paper>
       </Box>
@@ -149,6 +159,23 @@ const CheckDevice: React.FC = () => {
             ? "ANDROID 裝置"
             : "亲！目前暂时不支援该平台!!\n请直接与客服联络"}
         </Typography>
+        <br />
+        {CosApiUtil.getInstance().isInitApiUrl &&(
+          <Typography
+            variant="h6"
+            sx={{
+              color: 'white',
+              fontWeight: "bold",
+              whiteSpace: "pre-line",
+            }}
+          >
+            {CosApiUtil.getInstance().getApiUrlFailReason==='success'
+              ? "使用线路:线路1"
+              : "使用线路:备用线路"}
+          </Typography>
+        )}
+
+        
       </Paper>
     </Box>
   );

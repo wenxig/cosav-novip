@@ -270,7 +270,137 @@ export interface TempFeedbacVideoData {
   player: string;
   line: string;
   reason: string;
+  downloadSpeed: string;
 }
+
+// 播放速度統計（不持久化，僅內存）
+// 速率樣本有效區間：低於下限（極慢到不合理）/ 高於上限（瀏覽器緩存命中）都丟棄
+const SPEED_MIN_KBPS = 10;
+const SPEED_MAX_KBPS = 100000; // 100Mbps
+const MIN_DURATION_MS = 50; // duration 太短說明命中緩存，計算出的速率不可信
+
+interface PlaybackSpeedState {
+  speedSamples: number[]; // kbps
+  ttfbSamples: number[]; // ms，每個 TS 的首字節響應時間
+  stallCount: number;
+  totalSegments: number; // TS 總段數
+  errorCount: number;
+  netErrorCount: number;
+  mediaErrorCount: number;
+  otherErrorCount: number;
+  cacheHitCount: number; // duration 過短被過濾的樣本數（命中瀏覽器緩存）
+  firstLoadMs: number; // 首個 TS 加載耗時(ms)
+  bufferingMs: number; // 累計緩衝等待毫秒數
+  m3u8LoadCount: number; // m3u8 加載次數（正常1次，多次=抖動或重載）
+  _bufferingStart: number; // 緩衝開始時間戳（內部用）
+  addSpeedSample: (kbps: number, durationMs?: number) => void;
+  addTtfbSample: (ms: number) => void;
+  addStall: () => void;
+  endStall: () => void;
+  setTotalSegments: (total: number) => void;
+  addError: (type?: string) => void;
+  setFirstLoad: (ms: number) => void;
+  addM3u8Load: () => void;
+  getSpeedSummary: () => string;
+  reset: () => void;
+}
+
+export const usePlaybackSpeed = create<PlaybackSpeedState>()((set, get) => ({
+  speedSamples: [],
+  ttfbSamples: [],
+  stallCount: 0,
+  totalSegments: 0,
+  errorCount: 0,
+  netErrorCount: 0,
+  mediaErrorCount: 0,
+  otherErrorCount: 0,
+  cacheHitCount: 0,
+  firstLoadMs: 0,
+  bufferingMs: 0,
+  m3u8LoadCount: 0,
+  _bufferingStart: 0,
+  addSpeedSample: (kbps: number, durationMs?: number) => set((state) => {
+    // duration 過短 → 瀏覽器緩存命中，丟棄並計數
+    if (durationMs !== undefined && durationMs < MIN_DURATION_MS) {
+      return { cacheHitCount: state.cacheHitCount + 1 };
+    }
+    // 樣本不在合理區間 → 丟棄（< 10kbps 可能是錯誤讀數，> 100Mbps 基本是緩存命中假值）
+    if (!Number.isFinite(kbps) || kbps < SPEED_MIN_KBPS || kbps > SPEED_MAX_KBPS) {
+      return { cacheHitCount: state.cacheHitCount + 1 };
+    }
+    return { speedSamples: [...state.speedSamples.slice(-50), kbps] };
+  }),
+  addTtfbSample: (ms: number) => set((state) => ({
+    ttfbSamples: [...state.ttfbSamples.slice(-50), ms]
+  })),
+  addStall: () => set((state) => ({
+    stallCount: state.stallCount + 1,
+    _bufferingStart: Date.now(),
+  })),
+  endStall: () => set((state) => {
+    if (state._bufferingStart === 0) return {};
+    const elapsed = Date.now() - state._bufferingStart;
+    return { bufferingMs: state.bufferingMs + elapsed, _bufferingStart: 0 };
+  }),
+  setTotalSegments: (total: number) => set({ totalSegments: total }),
+  addError: (type?: string) => set((state) => {
+    if (type === 'networkError') {
+      return { errorCount: state.errorCount + 1, netErrorCount: state.netErrorCount + 1 };
+    }
+    if (type === 'mediaError') {
+      return { errorCount: state.errorCount + 1, mediaErrorCount: state.mediaErrorCount + 1 };
+    }
+    return { errorCount: state.errorCount + 1, otherErrorCount: state.otherErrorCount + 1 };
+  }),
+  setFirstLoad: (ms: number) => set((state) => {
+    if (state.firstLoadMs === 0) return { firstLoadMs: ms };
+    return {};
+  }),
+  addM3u8Load: () => set((state) => ({ m3u8LoadCount: state.m3u8LoadCount + 1 })),
+  getSpeedSummary: () => {
+    const { speedSamples, ttfbSamples, stallCount, totalSegments, errorCount,
+            netErrorCount, mediaErrorCount, otherErrorCount, cacheHitCount,
+            firstLoadMs, bufferingMs, m3u8LoadCount } = get();
+    if (speedSamples.length === 0 && errorCount === 0) return '';
+    const parts: string[] = [];
+    if (speedSamples.length >= 5) {
+      // 樣本足夠才算 avg，否則只展示 min/max + low_samples 標記
+      const avg = Math.round(speedSamples.reduce((a, b) => a + b, 0) / speedSamples.length);
+      const min = Math.round(Math.min(...speedSamples));
+      const max = Math.round(Math.max(...speedSamples));
+      parts.push(`avg:${avg}kbps,min:${min}kbps,max:${max}kbps`);
+    } else if (speedSamples.length > 0) {
+      const min = Math.round(Math.min(...speedSamples));
+      const max = Math.round(Math.max(...speedSamples));
+      parts.push(`low_samples:${speedSamples.length},min:${min}kbps,max:${max}kbps`);
+    }
+    if (ttfbSamples.length > 0) {
+      const ttfbAvg = Math.round(ttfbSamples.reduce((a, b) => a + b, 0) / ttfbSamples.length);
+      const ttfbMax = Math.round(Math.max(...ttfbSamples));
+      parts.push(`ttfb_avg:${ttfbAvg}ms,ttfb_max:${ttfbMax}ms`);
+    }
+    parts.push(`stall:${stallCount}`);
+    parts.push(`samples:${speedSamples.length}`);
+    if (cacheHitCount > 0) parts.push(`cache_hit:${cacheHitCount}`);
+    if (totalSegments > 0) parts.push(`total:${totalSegments}`);
+    if (bufferingMs > 0) parts.push(`buffering:${(bufferingMs / 1000).toFixed(1)}s`);
+    if (errorCount > 0) {
+      parts.push(`errors:${errorCount}`);
+      if (netErrorCount > 0) parts.push(`err_net:${netErrorCount}`);
+      if (mediaErrorCount > 0) parts.push(`err_media:${mediaErrorCount}`);
+      if (otherErrorCount > 0) parts.push(`err_other:${otherErrorCount}`);
+    }
+    if (firstLoadMs > 0) parts.push(`firstLoad:${(firstLoadMs / 1000).toFixed(1)}s`);
+    if (m3u8LoadCount > 0) parts.push(`m3u8:${m3u8LoadCount}`);
+    return parts.join(',');
+  },
+  reset: () => set({
+    speedSamples: [], ttfbSamples: [], stallCount: 0, totalSegments: 0,
+    errorCount: 0, netErrorCount: 0, mediaErrorCount: 0, otherErrorCount: 0,
+    cacheHitCount: 0,
+    firstLoadMs: 0, bufferingMs: 0, m3u8LoadCount: 0, _bufferingStart: 0,
+  }),
+}))
 
 
 interface TempDataState {
