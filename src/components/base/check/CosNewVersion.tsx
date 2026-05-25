@@ -1,36 +1,25 @@
-import React from 'react';
-import {
-  Dialog,
-  DialogContent,
-  Box,
-  Typography,
-  Button,
-} from '@mui/material';
-import { cMainColor, cWhite60, cWhite80 } from '../../../data/ColorDef';
-import { getSiteSetting } from '../../../data/DataCenter';
-import packageJson from '../../../../package.json';
+import React from "react";
+import { Dialog, DialogContent, Box, Typography, Button } from "@mui/material";
+import { cMainColor, cWhite60, cWhite80 } from "../../../data/ColorDef";
+import { getSiteSetting } from "../../../data/DataCenter";
+import packageJson from "../../../../package.json";
 
 interface CosNewVersionProps {
   open: boolean;
   onCancel: () => void;
 }
 
-const CosNewVersion: React.FC<CosNewVersionProps> = ({
-  open,
-  onCancel=()=>{}
-}) => {
-
+const CosNewVersion: React.FC<CosNewVersionProps> = ({ open, onCancel = () => {} }) => {
   const width = document.documentElement.clientWidth;
-
 
   const handleUpdateClick = () => {
     // 另開指定URL
-    window.open(downloadUrl, '_blank');
+    window.open(downloadUrl, "_blank");
   };
 
   const handleUpdateClick2 = () => {
     // 另開指定URL
-    window.open(downloadUrl2, '_blank');
+    window.open(downloadUrl2, "_blank");
   };
 
   const siteSettingData = getSiteSetting();
@@ -44,7 +33,7 @@ const CosNewVersion: React.FC<CosNewVersionProps> = ({
     <Dialog
       open={open}
       onClose={(event, reason) => {
-        if (reason === 'backdropClick' || reason === 'escapeKeyDown') {
+        if (reason === "backdropClick" || reason === "escapeKeyDown") {
           return;
         }
         onCancel();
@@ -52,136 +41,142 @@ const CosNewVersion: React.FC<CosNewVersionProps> = ({
       slotProps={{
         paper: {
           sx: {
-            backgroundColor: 'transparent',
-            color: 'white',
+            backgroundColor: "transparent",
+            color: "white",
             width: width - 60,
-            height: '85%',
-            borderRadius: '12px',
+            height: "85%",
+            borderRadius: "12px",
             margin: 0,
-            maxWidth: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-          }
-        }
+            maxWidth: "100%",
+            display: "flex",
+            flexDirection: "column",
+          },
+        },
       }}
       sx={{
-        '& .MuiDialog-container': {
+        "& .MuiDialog-container": {
           padding: 0,
         },
-        '& .MuiDialog-paper': {
+        "& .MuiDialog-paper": {
           margin: 0,
-        }
+        },
       }}
     >
-    {/* 對話主內容 */}
-    <Box
-      sx={{
-        borderRadius: '12px',
-        backgroundColor: 'rgb(45, 45, 45)',
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-      }}
-    >
-      {/* 對話主內容的內容 */}
-        <DialogContent sx={{ 
-          padding: '25px 20px',
-          flex: 1,
-          overflow: 'auto',
-          textAlign: 'center',
-        }}>
-          
-            {/* 1. 圖示 */}
-            <img 
-              src="/icons/favicon.png" 
-              alt="CosAV Icon" 
-              style={{ 
-                width: '100px', 
-                height: '100px',
-                borderRadius: '12px'
-              }} 
-            />
+      {/* 對話主內容 */}
+      <Box
+        sx={{
+          borderRadius: "12px",
+          backgroundColor: "rgb(45, 45, 45)",
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        {/* 對話主內容的內容 */}
+        <DialogContent
+          sx={{
+            padding: "25px 20px",
+            flex: 1,
+            overflow: "auto",
+            textAlign: "center",
+          }}
+        >
+          {/* 1. 圖示 */}
+          <img
+            src="/icons/favicon.png"
+            alt="CosAV Icon"
+            style={{
+              width: "100px",
+              height: "100px",
+              borderRadius: "12px",
+            }}
+          />
 
-            {/* 2. 標題文字 */}
-            <Typography sx={{ 
-              color: "white", 
-              fontSize: "24px", 
+          {/* 2. 標題文字 */}
+          <Typography
+            sx={{
+              color: "white",
+              fontSize: "24px",
               fontWeight: 800,
-              marginBottom: '5px'
-            }}>
-              更新CosAV
-            </Typography>
+              marginBottom: "5px",
+            }}
+          >
+            更新CosAV
+          </Typography>
 
-            {/* 3. 版本資訊文字 */}
-            <Typography sx={{ 
-              color: cWhite60, 
+          {/* 3. 版本資訊文字 */}
+          <Typography
+            sx={{
+              color: cWhite60,
               fontSize: "12px",
-              marginBottom: '5px'
-            }}>
-              目前版本 {currentVersion}，更新至 {latestVersion}
-            </Typography>
+              marginBottom: "5px",
+            }}
+          >
+            目前版本 {currentVersion}，更新至 {latestVersion}
+          </Typography>
 
-            {/* 4. 版本詳細資訊文字 */}
-            <Typography sx={{ 
-              color: cWhite80, 
+          {/* 4. 版本詳細資訊文字 */}
+          <Typography
+            sx={{
+              color: cWhite80,
               fontSize: "14px",
-              textAlign: 'left',
-              whiteSpace: 'pre-line',
-              marginBottom: '30px',
-              lineHeight: '1.4',
-              padding: '0px 20px'
-            }}>
-              {versionInfo}
-            </Typography>
+              textAlign: "left",
+              whiteSpace: "pre-line",
+              marginBottom: "30px",
+              lineHeight: "1.4",
+              padding: "0px 20px",
+            }}
+          >
+            {versionInfo}
+          </Typography>
 
-            {/* 5. 更新按鈕 */}
-            <Button
-              variant="contained"
-              onClick={handleUpdateClick}
-              sx={{
+          {/* 5. 更新按鈕 */}
+          <Button
+            variant="contained"
+            onClick={handleUpdateClick}
+            sx={{
+              backgroundColor: cMainColor,
+              color: "white",
+              fontSize: "16px",
+              fontWeight: 600,
+              padding: "12px 32px",
+              borderRadius: "8px",
+              textTransform: "none",
+              "&:hover": {
                 backgroundColor: cMainColor,
-                color: 'white',
-                fontSize: '16px',
-                fontWeight: 600,
-                padding: '12px 32px',
-                borderRadius: '8px',
-                textTransform: 'none',
-                '&:hover': {
-                  backgroundColor: cMainColor,
-                  opacity: 0.9,
-                },
-                minWidth: '200px'
-              }}
-            >
-              下載點1
-            </Button>
+                opacity: 0.9,
+              },
+              minWidth: "200px",
+            }}
+          >
+            下載點1
+          </Button>
 
-            <Button
-              variant="contained"
-              onClick={handleUpdateClick2}
-              sx={{
+          <Button
+            variant="contained"
+            onClick={handleUpdateClick2}
+            sx={{
+              backgroundColor: cMainColor,
+              color: "white",
+              fontSize: "16px",
+              fontWeight: 600,
+              padding: "12px 32px",
+              borderRadius: "8px",
+              textTransform: "none",
+              marginTop: "12px",
+              "&:hover": {
                 backgroundColor: cMainColor,
-                color: 'white',
-                fontSize: '16px',
-                fontWeight: 600,
-                padding: '12px 32px',
-                borderRadius: '8px',
-                textTransform: 'none',
-                marginTop: '12px',
-                '&:hover': {
-                  backgroundColor: cMainColor,
-                  opacity: 0.9,
-                },
-                minWidth: '200px'
-              }}
-            >
-              下載點2
-            </Button>
-            
+                opacity: 0.9,
+              },
+              minWidth: "200px",
+            }}
+          >
+            下載點2
+          </Button>
         </DialogContent>
       </Box>
     </Dialog>
   );
 };
 
-export default CosNewVersion; 
+export default CosNewVersion;

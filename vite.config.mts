@@ -1,46 +1,44 @@
-import { fileURLToPath, URL } from 'node:url'
-import { defineConfig } from 'vite'
-import { browserslistToTargets } from 'lightningcss'
-import browserslist from 'browserslist'
-import react from '@vitejs/plugin-react'
-import legacyPlugin from '@vitejs/plugin-legacy'
-import tailwindcss from '@tailwindcss/vite'
+import { fileURLToPath, URL } from "node:url";
+import { defineConfig } from "vite";
+import { browserslistToTargets } from "lightningcss";
+import browserslist from "browserslist";
+import react from "@vitejs/plugin-react";
+import legacyPlugin from "@vitejs/plugin-legacy";
+import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   staged: {
-    "*": "vp check --fix"
+    "*": "vp check --fix",
   },
-  lint: {"options":{"typeAware":true,"typeCheck":true}},
+  lint: { options: { typeAware: true, typeCheck: true } },
   plugins: [
     react(),
     tailwindcss(),
     legacyPlugin({
-      targets: ['defaults', 'ie >= 11', 'chrome 52'],
-      additionalLegacyPolyfills: ['regenerator-runtime/runtime'],
+      targets: ["defaults", "ie >= 11", "chrome 52"],
+      additionalLegacyPolyfills: ["regenerator-runtime/runtime"],
       renderLegacyChunks: true,
       renderModernChunks: false,
-
-    })
+    }),
   ],
   experimental: {
-    enableNativePlugin: true
+    enableNativePlugin: true,
   },
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
-    }
+      "@": fileURLToPath(new URL("./src", import.meta.url)),
+    },
   },
   css: {
-    transformer: 'lightningcss',
+    transformer: "lightningcss",
     lightningcss: {
-      targets: browserslistToTargets(browserslist('> 1%, last 2 versions, not ie <= 8')),
+      targets: browserslistToTargets(browserslist("> 1%, last 2 versions, not ie <= 8")),
     },
-
   },
   base: "/",
   define: {
-    process: "import.meta"
+    process: "import.meta",
   },
   server: {
-    port: 1145
-  }
-})
+    port: 1145,
+  },
+});

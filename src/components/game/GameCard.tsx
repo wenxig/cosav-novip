@@ -91,7 +91,7 @@ const GameCard: React.FC<CosGridCardProps> = ({
   const titleHeight = imageHeight * 0.4;
   const componentHeight = Math.min(
     imageHeight + titleHeight,
-    document.documentElement.clientHeight
+    document.documentElement.clientHeight,
   );
 
   const containerStyle = {
@@ -221,9 +221,7 @@ const GameCard: React.FC<CosGridCardProps> = ({
             {game.category}
           </Typography>
         </Box>
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          {getPlatformIcons(game.type)}
-        </Box>
+        <Box sx={{ display: "flex", alignItems: "center" }}>{getPlatformIcons(game.type)}</Box>
       </Box>
     </Box>
   );

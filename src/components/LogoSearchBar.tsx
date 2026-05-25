@@ -67,7 +67,7 @@ const LogoSearchBar: React.FC<LogoSearchBarProps> = ({
           onClick={() => {
             tempData.searchBackUrl = backUrl;
             navigate(searchPagePath, {
-              state: { from: location.pathname + location.search }
+              state: { from: location.pathname + location.search },
             });
           }}
           sx={{
@@ -85,9 +85,7 @@ const LogoSearchBar: React.FC<LogoSearchBarProps> = ({
             },
           }}
         >
-          <SearchIcon
-            sx={{ color: cMainColor, fontSize: "24px", padding: "0px" }}
-          />
+          <SearchIcon sx={{ color: cMainColor, fontSize: "24px", padding: "0px" }} />
           搜尋
         </Button>
 

@@ -1,62 +1,58 @@
-import React, { useEffect, useState} from 'react';
-import useSWR from 'swr';
-import { CircularProgress, Box } from '@mui/material';
-import { getSiteAdtemplate } from '../Shared/Api/CosApi';
-import { cMainColor } from '../data/ColorDef';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import useSWR from "swr";
+import { CircularProgress, Box } from "@mui/material";
+import { getSiteAdtemplate } from "../Shared/Api/CosApi";
+import { cMainColor } from "../data/ColorDef";
+import { useNavigate } from "react-router-dom";
 //import { API_DEDUPING_INTERVAL } from '../data/ParameterDef';
 
-export type AdType = 
-  | 'APP_FULL_AD_UP'
-  | 'APP_FULL_AD_down'
-  | 'APP_FULL_AD_over_down'
-  | 'INDEX_VIEW'
-  | 'INDEX_VIEW2'
-  | 'INDEX_EVENT'
-  | 'INDEX_INFO'
-  | 'VIDEO_COVER'
-  | 'VIDEO_INFO'
-  | 'ALBUM_COVER'
-  | 'ALBUM_INFO'
-  | 'PLAYER_VIEW'
-  | 'PLAYER_BUFFER'
-  | 'GAME_INFO';
-
+export type AdType =
+  | "APP_FULL_AD_UP"
+  | "APP_FULL_AD_down"
+  | "APP_FULL_AD_over_down"
+  | "INDEX_VIEW"
+  | "INDEX_VIEW2"
+  | "INDEX_EVENT"
+  | "INDEX_INFO"
+  | "VIDEO_COVER"
+  | "VIDEO_INFO"
+  | "ALBUM_COVER"
+  | "ALBUM_INFO"
+  | "PLAYER_VIEW"
+  | "PLAYER_BUFFER"
+  | "GAME_INFO";
 
 export const AD_DATA = {
-  APP_FULL_AD_UP: {name: "app_full_ad_up", w: 300, h: 250 },
-  APP_FULL_AD_down: {name: "app_full_ad_down", w: 300, h: 250 },
-  APP_FULL_AD_over_down: {name: "app_full_ad_over_down", w: 300, h: 100 },
+  APP_FULL_AD_UP: { name: "app_full_ad_up", w: 300, h: 250 },
+  APP_FULL_AD_down: { name: "app_full_ad_down", w: 300, h: 250 },
+  APP_FULL_AD_over_down: { name: "app_full_ad_over_down", w: 300, h: 100 },
 
-
-  INDEX_VIEW: {name: "index_view", w: 600, h: 800 },
-  INDEX_VIEW2: {name: "index_view_2", w: 600, h: 800 },
-  INDEX_EVENT: {name: "index_event", w: 300, h: 100 },
+  INDEX_VIEW: { name: "index_view", w: 600, h: 800 },
+  INDEX_VIEW2: { name: "index_view_2", w: 600, h: 800 },
+  INDEX_EVENT: { name: "index_event", w: 300, h: 100 },
   //INDEX_EVENT: {name: "index_event", w: 900, h: 300 },
   //INDEX_INFO: {name: "index_info", w: 728, h: 90 },
-  INDEX_INFO: {name: "index_info", w: 900, h: 210 },
+  INDEX_INFO: { name: "index_info", w: 900, h: 210 },
   //VIDEO_COVER: {name: "video_cover", w: 728, h: 90 },
-  VIDEO_COVER: {name: "video_cover", w: 600, h: 200 },
-  VIDEO_INFO: {name: "video_info", w: 900, h: 210 },
+  VIDEO_COVER: { name: "video_cover", w: 600, h: 200 },
+  VIDEO_INFO: { name: "video_info", w: 900, h: 210 },
   //ALBUM_COVER: {name: "album_cover", w: 728, h: 90 },
-  ALBUM_COVER: {name: "album_cover", w: 900, h: 210 },
+  ALBUM_COVER: { name: "album_cover", w: 900, h: 210 },
   //ALBUM_INFO: {name: "album_info", w: 300, h: 100 },
-  ALBUM_INFO: {name: "album_info", w: 900, h: 210 },
-  PLAYER_VIEW: {name: "player_view", w: 500, h: 280 },
-  PLAYER_BUFFER: {name: "player_view", w: 500, h: 280 },
-  GAME_INFO: {name: "index_info", w: 900, h: 210 },
+  ALBUM_INFO: { name: "album_info", w: 900, h: 210 },
+  PLAYER_VIEW: { name: "player_view", w: 500, h: 280 },
+  PLAYER_BUFFER: { name: "player_view", w: 500, h: 280 },
+  GAME_INFO: { name: "index_info", w: 900, h: 210 },
 } as const;
 
 interface CosAdIFrameProps {
   adType: AdType;
   position?: any;
-  limit?: {width?: number, height?: number};
+  limit?: { width?: number; height?: number };
   width?: number;
   closeButton?: boolean;
   pageName: string;
 }
-
-
 
 const CosAdIFrame: React.FC<CosAdIFrameProps> = ({
   adType,
@@ -64,7 +60,7 @@ const CosAdIFrame: React.FC<CosAdIFrameProps> = ({
   limit = {},
   width = document.documentElement.clientWidth,
   closeButton = false,
-  pageName
+  pageName,
 }) => {
   const adData = AD_DATA[adType];
   const navigate = useNavigate();
@@ -83,8 +79,13 @@ const CosAdIFrame: React.FC<CosAdIFrameProps> = ({
 
   //取得螢幕寬度和高度
   let componentWidth = Math.min(width, adData.w, limit.width ?? 9999);
-  let componentHeight = Math.min(maxHeight,adData.h,componentWidth * adData.h / adData.w, limit.height ?? 9999);
-  componentWidth = componentHeight * adData.w / adData.h;
+  let componentHeight = Math.min(
+    maxHeight,
+    adData.h,
+    (componentWidth * adData.h) / adData.w,
+    limit.height ?? 9999,
+  );
+  componentWidth = (componentHeight * adData.w) / adData.h;
 
   const fetcher = async (apiName: string) => {
     const res = await getSiteAdtemplate(apiName);
@@ -93,51 +94,48 @@ const CosAdIFrame: React.FC<CosAdIFrameProps> = ({
 
   // 依 adType 建立快取鍵，相同 adType 共用暫存，有暫存時直接使用不重新請求
   const cacheKey = adData.name;
-  
-  const { data: adDataList, error, isLoading: isUrlLoading } = useSWR(
-    cacheKey, 
-    () => fetcher(adData.name),
-    {
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-      revalidateIfStale: false, // 有暫存時不重新驗證
-      dedupingInterval: 10 * 60 * 1000, // 10 分鐘內使用暫存，不重新請求
-      //revalidateIfStale: false, // 如果資料過期不重新獲取
-      //refreshInterval: 0, // 不自動重新獲取
-      onSuccess: (data) => {
-        // 只在組件掛載時處理成功回調
-        if (isMountedRef.current && data && data.length > 0) {
-          if (data[0].adv_sale_type !== 'own' && adType !== 'INDEX_VIEW2') {
-            safeSetState(setIsShowAdIcon, true);
-          }
+
+  const {
+    data: adDataList,
+    error,
+    isLoading: isUrlLoading,
+  } = useSWR(cacheKey, () => fetcher(adData.name), {
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+    revalidateIfStale: false, // 有暫存時不重新驗證
+    dedupingInterval: 10 * 60 * 1000, // 10 分鐘內使用暫存，不重新請求
+    //revalidateIfStale: false, // 如果資料過期不重新獲取
+    //refreshInterval: 0, // 不自動重新獲取
+    onSuccess: (data) => {
+      // 只在組件掛載時處理成功回調
+      if (isMountedRef.current && data && data.length > 0) {
+        if (data[0].adv_sale_type !== "own" && adType !== "INDEX_VIEW2") {
+          safeSetState(setIsShowAdIcon, true);
         }
       }
-    }
-  );
-
-
-
+    },
+  });
 
   // 組成 HTML 內容
   const iframeHtml = React.useMemo(() => {
     if (!adDataList || adDataList.length === 0) return null;
-    
-    let bodyContent = '';
-    
-    if(adType === 'INDEX_VIEW2'){
+
+    let bodyContent = "";
+
+    if (adType === "INDEX_VIEW2") {
       bodyContent = `<div class="grid-container">`;
-      for(let i = 0; i < adDataList.length; i++){
+      for (let i = 0; i < adDataList.length; i++) {
         bodyContent += `<div class="grid-item">`;
         bodyContent += adDataList[i].adv_text;
         bodyContent += `<h2 class="ad-name">${adDataList[i].adv_name}</h2>`;
         bodyContent += `</div>`;
       }
       bodyContent += `</div>`;
-    }else{
+    } else {
       const rndIndex = 0; //Math.floor(Math.random() * adDataList.length);
       bodyContent += adDataList[rndIndex].adv_text;
     }
-    
+
     // 創建完整的 HTML 文檔
     const fullHtml = `
       <!DOCTYPE html>
@@ -202,31 +200,31 @@ const CosAdIFrame: React.FC<CosAdIFrameProps> = ({
         </head>
         <body>
           <div style="width: ${componentWidth}px; height: ${componentHeight}px;object-fit: scale-down;text-align: center;">
-          ${bodyContent || ''}
+          ${bodyContent || ""}
           </div>
         </body>
       </html>
     `;
-    
+
     return fullHtml;
   }, [adDataList, adType, componentWidth, componentHeight]);
 
   // 創建 Blob URL 用於 iframe
   const iframeSrc = React.useMemo(() => {
-    if (!iframeHtml || iframeHtml.trim() === '') return null;
-    
-    const blob = new Blob([iframeHtml], { type: 'text/html' });
+    if (!iframeHtml || iframeHtml.trim() === "") return null;
+
+    const blob = new Blob([iframeHtml], { type: "text/html" });
     return URL.createObjectURL(blob);
   }, [iframeHtml]);
 
   const shouldRedirectToSponsor = React.useMemo(() => {
     if (!iframeHtml) return false;
-    return iframeHtml.includes('COS_GOTO_SPONSOR_PAGE');
+    return iframeHtml.includes("COS_GOTO_SPONSOR_PAGE");
   }, [iframeHtml]);
 
   const handleSponsorClick = React.useCallback(() => {
     if (shouldRedirectToSponsor) {
-      navigate('/sponsor');
+      navigate("/sponsor");
     }
   }, [shouldRedirectToSponsor, navigate]);
 
@@ -242,84 +240,82 @@ const CosAdIFrame: React.FC<CosAdIFrameProps> = ({
   // 清理 Blob URL
   useEffect(() => {
     return () => {
-      if (iframeSrc && iframeSrc.startsWith('blob:')) {
+      if (iframeSrc && iframeSrc.startsWith("blob:")) {
         URL.revokeObjectURL(iframeSrc);
       }
     };
   }, [iframeSrc]);
-  
-  
 
   const containerStyle = {
     width: width,
     height: componentHeight,
-    position: 'relative',
+    position: "relative",
     ...position,
-    backgroundColor: '#000',
-    overflow: 'hidden',
-    borderRadius: '4px',
-    boxShadow: '0 4px 4px rgba(0,0,0,0.2)',
+    backgroundColor: "#000",
+    overflow: "hidden",
+    borderRadius: "4px",
+    boxShadow: "0 4px 4px rgba(0,0,0,0.2)",
   };
 
   const iframeStyle = {
-    position: 'absolute' as const,
+    position: "absolute" as const,
     width: componentWidth,
     height: componentHeight,
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    border: 'none'
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    border: "none",
   };
 
   const loadingStyle = {
-    position: 'absolute' as const,
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    zIndex: 1
+    position: "absolute" as const,
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    zIndex: 1,
   };
 
   const closeButtonStyle = {
-    position: 'absolute' as const,
-    top: '0px',
-    right: '10px',
+    position: "absolute" as const,
+    top: "0px",
+    right: "10px",
     zIndex: 10,
-    width: '20px',
-    height: '20px',
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    color: 'white',
-    border: 'none',
-    borderRadius: '50%',
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: '14px',
-    fontWeight: 'bold',
-    '&:hover': {
-      backgroundColor: 'rgba(0, 0, 0, 0.9)',
-    }
+    width: "20px",
+    height: "20px",
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    color: "white",
+    border: "none",
+    borderRadius: "50%",
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: "14px",
+    fontWeight: "bold",
+    "&:hover": {
+      backgroundColor: "rgba(0, 0, 0, 0.9)",
+    },
   };
 
   const adIconButtonStyle = {
-    position: 'absolute' as const,
-    top: componentHeight > 700 ? '10px' : '15px',
-    left: '10px',
+    position: "absolute" as const,
+    top: componentHeight > 700 ? "10px" : "15px",
+    left: "10px",
     zIndex: 10,
-    width: '24px',
-    height: '24px',
+    width: "24px",
+    height: "24px",
     backgroundColor: cMainColor,
-    color: 'white',
-    border: 'none',
-    borderRadius: '50%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: '14px',
-    fontWeight: 'bold',
-    '&:hover': {
-      backgroundColor: 'rgba(0, 0, 0, 0.9)',
-    }
+    color: "white",
+    border: "none",
+    borderRadius: "50%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: "14px",
+    fontWeight: "bold",
+    "&:hover": {
+      backgroundColor: "rgba(0, 0, 0, 0.9)",
+    },
   };
 
   // 如果組件已卸載，直接返回 null
@@ -331,20 +327,20 @@ const CosAdIFrame: React.FC<CosAdIFrameProps> = ({
     return (
       <Box sx={containerStyle}>
         <Box sx={loadingStyle}>
-          <CircularProgress 
-            sx={{ 
-              color: 'rgb(236, 121, 172)',
-              '& .MuiCircularProgress-circle': {
-                strokeWidth: 5
-              }
-            }} 
+          <CircularProgress
+            sx={{
+              color: "rgb(236, 121, 172)",
+              "& .MuiCircularProgress-circle": {
+                strokeWidth: 5,
+              },
+            }}
           />
         </Box>
       </Box>
     );
   }
 
-  if(!isShowAd){
+  if (!isShowAd) {
     return null;
   }
 
@@ -352,18 +348,18 @@ const CosAdIFrame: React.FC<CosAdIFrameProps> = ({
     <Box sx={containerStyle}>
       {isIframeLoading && (
         <Box sx={loadingStyle}>
-          <CircularProgress 
-            sx={{ 
-              color: 'rgb(236, 121, 172)',
-              '& .MuiCircularProgress-circle': {
-                strokeWidth: 3
-              }
-            }} 
+          <CircularProgress
+            sx={{
+              color: "rgb(236, 121, 172)",
+              "& .MuiCircularProgress-circle": {
+                strokeWidth: 3,
+              },
+            }}
           />
         </Box>
       )}
       {closeButton && isShowAd && (
-        <Box 
+        <Box
           component="button"
           sx={closeButtonStyle}
           onClick={() => safeSetState(setIsShowAd, false)}
@@ -372,20 +368,17 @@ const CosAdIFrame: React.FC<CosAdIFrameProps> = ({
         </Box>
       )}
       {isShowAdIcon && (
-        <Box 
-          component="div"
-          sx={adIconButtonStyle}
-        >
+        <Box component="div" sx={adIconButtonStyle}>
           AD
         </Box>
       )}
       {shouldRedirectToSponsor && (
         <Box
           sx={{
-            position: 'absolute',
+            position: "absolute",
             inset: 0,
             zIndex: 5,
-            cursor: 'pointer'
+            cursor: "pointer",
           }}
           onClick={handleSponsorClick}
         />
@@ -407,4 +400,4 @@ const CosAdIFrame: React.FC<CosAdIFrameProps> = ({
   );
 };
 
-export default CosAdIFrame; 
+export default CosAdIFrame;

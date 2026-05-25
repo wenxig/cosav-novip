@@ -1,21 +1,21 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { Box, Button, Typography } from '@mui/material';
-import { useNavigate, useParams } from 'react-router-dom';
-import TopTitleBar from '../../../components/TopTitleBar';
-import BaseMotionDiv from '../../BaseMotionDiv';
-import { cMainColor } from '../../../data/ColorDef';
-import CosGridFrame from '../../../components/CosGridFrame';
-import CosCheckIsDelete from '../../../components/base/check/CosCheckIsDelete';
-import CosPagination from '../../../components/base/CosPagination';
-import { ifVideoBaseInfo } from '../../../Shared/Api/interface/VideoInterface';
-import { pEachPageCount } from '../../../data/ParameterDef';
+import React, { useEffect, useMemo, useState } from "react";
+import { Box, Button, Typography } from "@mui/material";
+import { useNavigate, useParams } from "react-router-dom";
+import TopTitleBar from "../../../components/TopTitleBar";
+import BaseMotionDiv from "../../BaseMotionDiv";
+import { cMainColor } from "../../../data/ColorDef";
+import CosGridFrame from "../../../components/CosGridFrame";
+import CosCheckIsDelete from "../../../components/base/check/CosCheckIsDelete";
+import CosPagination from "../../../components/base/CosPagination";
+import { ifVideoBaseInfo } from "../../../Shared/Api/interface/VideoInterface";
+import { pEachPageCount } from "../../../data/ParameterDef";
 import {
   deleteDownloadedFile,
   deleteDownloadedVideoData,
   getDownloadedVideoDatasPage,
   videoDetailToBaseInfo,
-} from '../../../Shared/Utils/VideoDownloadUtil';
-import { getExchangeTicket } from '../../../Shared/Api/CosApi';
+} from "../../../Shared/Utils/VideoDownloadUtil";
+import { getExchangeTicket } from "../../../Shared/Api/CosApi";
 
 type DownloadPageVideoList = {
   lastpage: number;
@@ -26,7 +26,7 @@ type DownloadPageVideoList = {
 
 const emptyVideoList: DownloadPageVideoList = {
   lastpage: 0,
-  totalCnt: '0',
+  totalCnt: "0",
   MaxCnt: 0,
   lists: [],
 };
@@ -36,7 +36,7 @@ const CosDownloadPage: React.FC = () => {
   const navigate = useNavigate();
 
   const currentPage = useMemo(() => {
-    if (page == null || page === '') {
+    if (page == null || page === "") {
       return null;
     }
     const p = parseInt(page, 10);
@@ -45,7 +45,7 @@ const CosDownloadPage: React.FC = () => {
 
   useEffect(() => {
     if (currentPage === null) {
-      navigate('/my/downloads/1', { replace: true });
+      navigate("/my/downloads/1", { replace: true });
     }
   }, [currentPage, navigate]);
 
@@ -63,7 +63,7 @@ const CosDownloadPage: React.FC = () => {
         if (cancelled) return;
         setRemainDownload(res.data?.msg?.remain_download ?? 0);
       } catch (e) {
-        console.warn('讀取下載券餘額失敗', e);
+        console.warn("讀取下載券餘額失敗", e);
         if (!cancelled) {
           setRemainDownload(null);
         }
@@ -81,10 +81,7 @@ const CosDownloadPage: React.FC = () => {
     let cancelled = false;
     (async () => {
       try {
-        const { records, total } = await getDownloadedVideoDatasPage(
-          currentPage,
-          pEachPageCount
-        );
+        const { records, total } = await getDownloadedVideoDatasPage(currentPage, pEachPageCount);
         if (cancelled) return;
 
         const lastPage = Math.max(1, Math.ceil(total / pEachPageCount));
@@ -100,7 +97,7 @@ const CosDownloadPage: React.FC = () => {
           lists,
         });
       } catch (e) {
-        console.warn('讀取已下載影片清單失敗', e);
+        console.warn("讀取已下載影片清單失敗", e);
         if (!cancelled) {
           setVideoList(emptyVideoList);
         }
@@ -132,17 +129,11 @@ const CosDownloadPage: React.FC = () => {
     if (!videoId) return;
 
     const fileName = `${videoId}.mp4`;
-    await Promise.all([
-      deleteDownloadedFile(fileName),
-      deleteDownloadedVideoData(videoId),
-    ]);
+    await Promise.all([deleteDownloadedFile(fileName), deleteDownloadedVideoData(videoId)]);
     setListRefreshTick((t) => t + 1);
   };
 
-  const handlePageChange = (
-    _: React.ChangeEvent<unknown>,
-    value: number,
-  ) => {
+  const handlePageChange = (_: React.ChangeEvent<unknown>, value: number) => {
     navigate(`/my/downloads/${value}`, { replace: true });
   };
 
@@ -152,10 +143,10 @@ const CosDownloadPage: React.FC = () => {
     <BaseMotionDiv>
       <Box
         sx={{
-          backgroundColor: 'black',
-          minHeight: '100vh',
-          display: 'flex',
-          flexDirection: 'column',
+          backgroundColor: "black",
+          minHeight: "100vh",
+          display: "flex",
+          flexDirection: "column",
           gap: 1.5,
         }}
       >
@@ -163,20 +154,17 @@ const CosDownloadPage: React.FC = () => {
 
         <Box
           sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
+            display: "flex",
+            justifyContent: "space-between",
             px: 2,
-            alignItems: 'center',
+            alignItems: "center",
           }}
         >
-          <Typography sx={{ color: 'white', fontWeight: 'bold' }}>
-            持有下载券：{remainDownload !== null ? `${remainDownload} 张` : ''}
+          <Typography sx={{ color: "white", fontWeight: "bold" }}>
+            持有下载券：{remainDownload !== null ? `${remainDownload} 张` : ""}
           </Typography>
 
-          <Typography
-            onClick={() => navigate('/my/downloadsRecord')}
-            sx={{ color: cMainColor }}
-          >
+          <Typography onClick={() => navigate("/my/downloadsRecord")} sx={{ color: cMainColor }}>
             使用纪录
           </Typography>
         </Box>
@@ -185,36 +173,32 @@ const CosDownloadPage: React.FC = () => {
           <Box
             sx={{
               mt: 6,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
               gap: 2,
             }}
           >
-            <Typography sx={{ color: 'white', fontSize: '18px' }}>
-              尚未下载任何影片
-            </Typography>
+            <Typography sx={{ color: "white", fontSize: "18px" }}>尚未下载任何影片</Typography>
 
             <Button
               variant="outlined"
-              onClick={() =>
-                navigate('/sponsor', { state: { tab: 'download' } })
-              }
+              onClick={() => navigate("/sponsor", { state: { tab: "download" } })}
               sx={{
                 mt: 1,
                 px: 3,
                 py: 1,
                 borderColor: cMainColor,
-                borderRadius: '10px',
-                color: 'white',
-                fontWeight: 'bold',
+                borderRadius: "10px",
+                color: "white",
+                fontWeight: "bold",
               }}
             >
               前往购买下载券
             </Button>
 
             <Typography
-              onClick={() => navigate('/home')}
+              onClick={() => navigate("/home")}
               sx={{
                 mt: 1,
                 color: cMainColor,

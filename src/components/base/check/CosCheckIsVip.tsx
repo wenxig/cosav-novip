@@ -1,24 +1,19 @@
-import { checkIsVip } from '../../../Shared/function/AccountFunction';
-import CosConfirmDialog from '../CosConfirmDialog';
-import { useNavigate } from 'react-router-dom';
+import { checkIsVip } from "../../../Shared/function/AccountFunction";
+import CosConfirmDialog from "../CosConfirmDialog";
+import { useNavigate } from "react-router-dom";
 
 interface CosCheckIsLoginProps {
   open: boolean;
   onCancel: () => void;
 }
 
-
-const CosCheckIsVip: React.FC<CosCheckIsLoginProps> = ({
-  open,
-  onCancel,
-}) => {
-
+const CosCheckIsVip: React.FC<CosCheckIsLoginProps> = ({ open, onCancel }) => {
   const navigate = useNavigate();
 
   const handleConfirmSubmit = () => {
     onCancel();
-    navigate('/sponsor');
-  }
+    navigate("/sponsor");
+  };
 
   /*
   useEffect(() => {
@@ -28,7 +23,7 @@ const CosCheckIsVip: React.FC<CosCheckIsLoginProps> = ({
   }, [open,onLoginedAction]);
 */
 
-  if(!open || checkIsVip()){
+  if (!open || checkIsVip()) {
     return null;
   }
 
@@ -45,4 +40,4 @@ const CosCheckIsVip: React.FC<CosCheckIsLoginProps> = ({
   );
 };
 
-export default CosCheckIsVip; 
+export default CosCheckIsVip;

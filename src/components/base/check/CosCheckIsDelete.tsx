@@ -1,5 +1,5 @@
-import { Box } from '@mui/material';
-import CosConfirmDialog from '../CosConfirmDialog';
+import { Box } from "@mui/material";
+import CosConfirmDialog from "../CosConfirmDialog";
 
 interface CosCheckIsLoginProps {
   open: boolean;
@@ -33,12 +33,12 @@ const CosCheckIsDelete: React.FC<CosCheckIsLoginProps> = ({
       content={
         <Box
           sx={{
-            maxWidth: '100%',
-            overflowWrap: 'anywhere',
-            wordBreak: 'break-word',
+            maxWidth: "100%",
+            overflowWrap: "anywhere",
+            wordBreak: "break-word",
           }}
         >
-          <Box component="span" sx={{ color: '#ff4d4f', fontWeight: 'bold' }}>
+          <Box component="span" sx={{ color: "#ff4d4f", fontWeight: "bold" }}>
             是否删除影片：
           </Box>
           <br />

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -10,13 +10,13 @@ import {
   Menu,
   MenuItem,
   ListItemText,
-} from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import {  cBlack80} from '../../data/ColorDef';
-import { ifApiPaymentFunc } from '../../Shared/Api/interface/OrderInterface';
-import CosCheckIsLogin from '../base/check/CosCheckIsLogin';
-import { checkIsLogin } from '../../Shared/function/AccountFunction';
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import { cBlack80 } from "../../data/ColorDef";
+import { ifApiPaymentFunc } from "../../Shared/Api/interface/OrderInterface";
+import CosCheckIsLogin from "../base/check/CosCheckIsLogin";
+import { checkIsLogin } from "../../Shared/function/AccountFunction";
 
 interface CosConfirmDialogProps {
   open: boolean;
@@ -44,7 +44,7 @@ const SponsorCaseDialog: React.FC<CosConfirmDialogProps> = ({
 
   const handleClose = () => {
     onCancel();
-  }
+  };
 
   const handleMenuClick = (event: React.MouseEvent<HTMLElement>, func: ifApiPaymentFunc) => {
     setAnchorEl(event.currentTarget);
@@ -57,18 +57,18 @@ const SponsorCaseDialog: React.FC<CosConfirmDialogProps> = ({
   };
 
   const handlePayment = (paymentUrl: string) => {
-    if(checkIsLogin()){
+    if (checkIsLogin()) {
       //recordLastEnterBillingDialogTime();
       //console.log("paymentUrl = ",paymentUrl.replace('pay_key', selectedPKey));
       //alert("paymentUrl = "+paymentUrl.replace('pay_key', selectedPKey));
-      window.open(paymentUrl.replace('pay_key', selectedPKey), '_blank');
+      window.open(paymentUrl.replace("pay_key", selectedPKey), "_blank");
       handleMenuClose();
-    }else{
+    } else {
       setCheckIsLoginOpen(true);
     }
   };
 
-  console.log('pfunc', pfunc);
+  console.log("pfunc", pfunc);
 
   return (
     <Dialog
@@ -77,42 +77,43 @@ const SponsorCaseDialog: React.FC<CosConfirmDialogProps> = ({
       slotProps={{
         paper: {
           sx: {
-            backgroundColor: 'transparent',
-            color: 'black',
-            minWidth: '300px',
+            backgroundColor: "transparent",
+            color: "black",
+            minWidth: "300px",
             width: width,
             height: height,
-            borderRadius: '12px',
-          }
-        }
+            borderRadius: "12px",
+          },
+        },
       }}
     >
       {/* 對話主內容 */}
       <Box
         sx={{
-          borderRadius: '12px',
-          backgroundColor: 'transparent',
+          borderRadius: "12px",
+          backgroundColor: "transparent",
         }}
       >
         {/* 對話主內容的標題 */}
-        <DialogTitle sx={{ 
-          display: 'flex', 
-          justifyContent: 'center', 
-          alignItems: 'center',
-          backgroundColor: 'transparent',
-          padding: '10px 0px',
-        }}>
-          
+        <DialogTitle
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "transparent",
+            padding: "10px 0px",
+          }}
+        >
           <IconButton
             onClick={handleClose}
             aria-label="close"
             sx={{
-              color: 'white',
-              border: '3px solid white',
-              fontSize: '3rem',
-              '& .MuiSvgIcon-root': {
-                fontSize: '14px'
-              }
+              color: "white",
+              border: "3px solid white",
+              fontSize: "3rem",
+              "& .MuiSvgIcon-root": {
+                fontSize: "14px",
+              },
             }}
           >
             <CloseIcon />
@@ -120,97 +121,107 @@ const SponsorCaseDialog: React.FC<CosConfirmDialogProps> = ({
         </DialogTitle>
 
         {/* 對話主內容的內容 */}
-        <DialogContent sx={{ padding: '20px 10px' , textAlign: 'center' ,backgroundColor: 'white' ,borderRadius: '12px'}}>
-          <DialogContentText sx={{ color: 'black',fontSize: '24px'}}>
+        <DialogContent
+          sx={{
+            padding: "20px 10px",
+            textAlign: "center",
+            backgroundColor: "white",
+            borderRadius: "12px",
+          }}
+        >
+          <DialogContentText sx={{ color: "black", fontSize: "24px" }}>
             付费方式选择
           </DialogContentText>
 
-          <DialogContentText sx={{ color: 'black',fontSize: '14px'}}>
+          <DialogContentText sx={{ color: "black", fontSize: "14px" }}>
             帐单不会显示任何成人讯息，本站采SSL安全交易验证
           </DialogContentText>
-          <DialogContentText sx={{ color: 'red',fontSize: '14px'}}>
+          <DialogContentText sx={{ color: "red", fontSize: "14px" }}>
             充值完成后，请重启APP
           </DialogContentText>
 
           {/* 支付方式按鈕 */}
-          <Box sx={{ 
-            display: 'flex', 
-            flexWrap: 'wrap',
-            gap: 2,
-            justifyContent: 'center',
-            marginTop: 2
-          }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 2,
+              justifyContent: "center",
+              marginTop: 2,
+            }}
+          >
             {pfunc
-              .filter(func => func.payment_plans.length === 1)
+              .filter((func) => func.payment_plans.length === 1)
               .map((func, index) => (
                 <Button
                   key={index}
                   variant="outlined"
                   startIcon={
-                    <img 
-                      src={func.icon} 
+                    <img
+                      src={func.icon}
                       alt={func.name}
                       style={{
                         width: 24,
                         height: 24,
-                        objectFit: 'contain'
+                        objectFit: "contain",
                       }}
                     />
                   }
                   onClick={() => handlePayment(func.payment_plans[0].payment_url)}
                   sx={{
-                    width: '45%',
-                    justifyContent: 'flex-start',
-                    padding: '8px 16px',
-                    borderColor: 'rgba(0, 0, 0, 0.23)',
-                    '&:hover': {
-                      borderColor: 'rgba(0, 0, 0, 0.5)',
-                      backgroundColor: 'rgba(0, 0, 0, 0.04)'
-                    }
+                    width: "45%",
+                    justifyContent: "flex-start",
+                    padding: "8px 16px",
+                    borderColor: "rgba(0, 0, 0, 0.23)",
+                    "&:hover": {
+                      borderColor: "rgba(0, 0, 0, 0.5)",
+                      backgroundColor: "rgba(0, 0, 0, 0.04)",
+                    },
                   }}
                 >
                   {func.name}
                 </Button>
-              ))
-            }
+              ))}
           </Box>
 
           {/* 下拉式支付方式 */}
-          <Box sx={{ 
-            display: 'flex', 
-            flexDirection: 'column',
-            gap: 2,
-            marginTop: 3,
-            padding: '0 20px'
-          }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 2,
+              marginTop: 3,
+              padding: "0 20px",
+            }}
+          >
             {pfunc
-              .filter(func => func.payment_plans.length > 1)
+              .filter((func) => func.payment_plans.length > 1)
               .map((func, index) => (
                 <React.Fragment key={index}>
                   <Button
                     variant="outlined"
                     startIcon={
-                      <img 
-                        src={func.icon} 
+                      <img
+                        src={func.icon}
                         alt={func.name}
                         style={{
                           width: 24,
                           height: 24,
-                          objectFit: 'contain'
+                          objectFit: "contain",
                         }}
                       />
                     }
                     endIcon={<KeyboardArrowDownIcon />}
                     onClick={(e) => handleMenuClick(e, func)}
                     sx={{
-                      width: '100%',
-                      justifyContent: 'space-between',
-                      padding: '8px 16px',
-                      borderColor: 'rgba(0, 0, 0, 0.23)',
-                      '&:hover': {
-                        borderColor: 'rgba(0, 0, 0, 0.5)',
-                        backgroundColor: 'rgba(0, 0, 0, 0.04)'
-                      }
+                      width: "100%",
+                      justifyContent: "space-between",
+                      padding: "8px 16px",
+                      borderColor: "rgba(0, 0, 0, 0.23)",
+                      "&:hover": {
+                        borderColor: "rgba(0, 0, 0, 0.5)",
+                        backgroundColor: "rgba(0, 0, 0, 0.04)",
+                      },
                     }}
                   >
                     {func.name}
@@ -224,52 +235,46 @@ const SponsorCaseDialog: React.FC<CosConfirmDialogProps> = ({
                       paper: {
                         sx: {
                           width: width * 0.7,
-                          maxHeight: 300
-                        }
-                      }
+                          maxHeight: 300,
+                        },
+                      },
                     }}
                   >
                     {selectedFunc?.payment_plans.map((plan, planIndex) => (
-                      <MenuItem 
-                        key={planIndex}
-                        onClick={() => handlePayment(plan.payment_url)}
-                      >
+                      <MenuItem key={planIndex} onClick={() => handlePayment(plan.payment_url)}>
                         <ListItemText primary={plan.name} />
                       </MenuItem>
                     ))}
                   </Menu>
                 </React.Fragment>
-              ))
-            }
+              ))}
           </Box>
 
           <Box
             sx={{
               width: width * 0.8,
               color: cBlack80,
-              textAlign: 'left',
-              fontSize: '16px',
-              whiteSpace: 'pre-line',
-              padding: '30px 15px'
+              textAlign: "left",
+              fontSize: "16px",
+              whiteSpace: "pre-line",
+              padding: "30px 15px",
             }}
-            dangerouslySetInnerHTML={{ 
-              __html: note
-                .map(benefit => benefit.replace(/\n/g, '<br>'))
-                .join('<br>') || '' 
+            dangerouslySetInnerHTML={{
+              __html: note.map((benefit) => benefit.replace(/\n/g, "<br>")).join("<br>") || "",
             }}
           />
         </DialogContent>
-
-        
       </Box>
 
       {/* 檢查是否已登入 */}
       <CosCheckIsLogin
         open={checkIsLoginOpen}
-        onCancel={() => {setCheckIsLoginOpen(false)}}
+        onCancel={() => {
+          setCheckIsLoginOpen(false);
+        }}
       />
     </Dialog>
   );
 };
 
-export default SponsorCaseDialog; 
+export default SponsorCaseDialog;

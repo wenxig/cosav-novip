@@ -35,13 +35,8 @@ function CosRegistPage() {
   const [ageChecked, setAgeChecked] = useState(false);
 
   const [msg, setMsg] = useState("");
-  const [msgType, setMsgType] = useState<
-    "error" | "success" | "info" | "warning"
-  >("info");
-  const setShowMsg = (
-    msg: string,
-    msgType: "error" | "success" | "info" | "warning"
-  ) => {
+  const [msgType, setMsgType] = useState<"error" | "success" | "info" | "warning">("info");
+  const setShowMsg = (msg: string, msgType: "error" | "success" | "info" | "warning") => {
     setMsg(msg);
     setMsgType(msgType);
   };
@@ -115,19 +110,13 @@ function CosRegistPage() {
       }
 
       // 如果都通過檢查，執行註冊邏輯
-      const res = await sendAuthRegister(
-        account,
-        password,
-        confirmPassword,
-        email,
-        inviteCode
-      );
+      const res = await sendAuthRegister(account, password, confirmPassword, email, inviteCode);
 
       //呼叫API失敗
       if (res.result !== "success") {
-        if(!res.data){
+        if (!res.data) {
           setShowMsg("发送失败，请稍后重试", "error");
-        }else{
+        } else {
           setShowMsg(res.data.msg.join(","), "error");
         }
         return;
@@ -199,11 +188,7 @@ function CosRegistPage() {
               <CosBackButton />
 
               {/* 帳號輸入框 */}
-              <CosInputField
-                value={account}
-                title="帐号(请勿使用mail)"
-                setValue={setAccount}
-              />
+              <CosInputField value={account} title="帐号(请勿使用mail)" setValue={setAccount} />
 
               {/* 密碼輸入框 */}
               <CosInputField
@@ -270,11 +255,7 @@ function CosRegistPage() {
               <CosForgetPasswordButton />
 
               {/* 註冊按鈕 */}
-              <CosButton
-                text="注册帐号"
-                onClick={handleRegister1}
-                background={cMainColor3}
-              />
+              <CosButton text="注册帐号" onClick={handleRegister1} background={cMainColor3} />
 
               {/* 登入按鈕 */}
               <CosButton text="登入帐号" onClick={handleLogin} />
@@ -312,11 +293,7 @@ function CosRegistPage() {
               />
 
               {/* 註冊按鈕 */}
-              <CosButton
-                text="注册"
-                onClick={handleRegister2}
-                background={cMainColor3}
-              />
+              <CosButton text="注册" onClick={handleRegister2} background={cMainColor3} />
 
               {/* 返回註冊按鈕 */}
               <CosButton text="取消注册" onClick={handleCancelRegister} />

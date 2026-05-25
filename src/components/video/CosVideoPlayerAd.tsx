@@ -1,21 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import { Box, Typography } from '@mui/material';
-import { cBasePanel } from '../../data/ColorDef';
-import CosAdIFrame from '../CosAdIFrame';
-import CircularProgressWithValue from '../base/CircularProgressWithValue';
+import React, { useEffect, useState } from "react";
+import { Box, Typography } from "@mui/material";
+import { cBasePanel } from "../../data/ColorDef";
+import CosAdIFrame from "../CosAdIFrame";
+import CircularProgressWithValue from "../base/CircularProgressWithValue";
 
 interface CosVideoPlayerAdProps {
   adSec?: number;
 }
 
-const CosVideoPlayerAd: React.FC<CosVideoPlayerAdProps> = ({
-  adSec = 15,
-}) => {
+const CosVideoPlayerAd: React.FC<CosVideoPlayerAdProps> = ({ adSec = 15 }) => {
   const [countdown, setCountdown] = useState(adSec);
 
   // 建立秒數倒數的計時器
   useEffect(() => {
-    if(adSec <= 0){
+    if (adSec <= 0) {
       return;
     }
 
@@ -36,34 +34,34 @@ const CosVideoPlayerAd: React.FC<CosVideoPlayerAdProps> = ({
 
   // 廣告區域
   const adBoxStyle = {
-    position:'absolute',
-    top:0,
-    left:0,
-    width:'100%',
-    height:'100%',
-    textAlign:'center',
-    zIndex: 10
-  }
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    textAlign: "center",
+    zIndex: 10,
+  };
 
   // 廣告文字區域
   const adTextBarStyle = {
-    backgroundColor:cBasePanel,
-    width:'100%',
-    display: 'flex',
-    justifyContent: 'center',    
-    alignItems: 'center',    
-  }
+    backgroundColor: cBasePanel,
+    width: "100%",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  };
 
   return (
     <>
       {countdown > 0 && (
         <Box sx={adBoxStyle}>
-          <CosAdIFrame adType="PLAYER_VIEW" pageName={'videoPlayerAd'}/>
+          <CosAdIFrame adType="PLAYER_VIEW" pageName={"videoPlayerAd"} />
           <Box sx={adTextBarStyle}>
-            <Typography variant="h6" sx={{color:'white'}}>
+            <Typography variant="h6" sx={{ color: "white" }}>
               广告播放中，加入VIP可略过
             </Typography>
-            <CircularProgressWithValue nowProgress={countdown} maxProgress={adSec}/>
+            <CircularProgressWithValue nowProgress={countdown} maxProgress={adSec} />
           </Box>
         </Box>
       )}
@@ -71,4 +69,4 @@ const CosVideoPlayerAd: React.FC<CosVideoPlayerAdProps> = ({
   );
 };
 
-export default CosVideoPlayerAd; 
+export default CosVideoPlayerAd;

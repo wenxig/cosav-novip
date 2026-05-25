@@ -43,18 +43,11 @@ const VideoButtonBar: React.FC<VideoButtonBarProps> = ({
   const navigate = useNavigate();
 
   const [checkIsLoginOpen, setCheckIsLoginOpen] = useState(false);
-  const [isFavorite, setIsFavorite] = useState(
-    checkIsFavoriteVideo(videoId || "")
-  );
+  const [isFavorite, setIsFavorite] = useState(checkIsFavoriteVideo(videoId || ""));
 
   const [msg, setMsg] = useState("");
-  const [msgType, setMsgType] = useState<
-    "error" | "success" | "info" | "warning"
-  >("info");
-  const setShowMsg = (
-    msg: string,
-    msgType: "error" | "success" | "info" | "warning"
-  ) => {
+  const [msgType, setMsgType] = useState<"error" | "success" | "info" | "warning">("info");
+  const setShowMsg = (msg: string, msgType: "error" | "success" | "info" | "warning") => {
     setMsg(msg);
     setMsgType(msgType);
   };
@@ -156,9 +149,7 @@ const VideoButtonBar: React.FC<VideoButtonBarProps> = ({
         {/* 收藏按鈕 */}
         <Button
           variant="contained"
-          startIcon={
-            <FavoriteIcon sx={{ color: isFavorite ? "red" : "white" }} />
-          }
+          startIcon={<FavoriteIcon sx={{ color: isFavorite ? "red" : "white" }} />}
           sx={buttonStyle}
           onClick={handleFavoriteClick}
         >

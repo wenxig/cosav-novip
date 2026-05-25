@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Dialog,
   DialogTitle,
@@ -11,19 +11,13 @@ import {
   Box,
   Typography,
   LinearProgress,
-} from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 //import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import { cMainColor, cWhite80 } from '../../data/ColorDef';
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
+import { cMainColor, cWhite80 } from "../../data/ColorDef";
 
-export type DownloadDialogStatus =
-  | 'noCoupon'
-  | 'confirm'
-  | 'downloading'
-  | 'success'
-  | 'fail'
-  ;
+export type DownloadDialogStatus = "noCoupon" | "confirm" | "downloading" | "success" | "fail";
 
 interface CosDownloadDialogProps {
   open: boolean;
@@ -44,22 +38,22 @@ const CosDownloadDialog: React.FC<CosDownloadDialogProps> = ({
   status,
   progress = 0,
   usedCouponCount = 1,
-  downloadedSizeText = '0MB',
-  totalSizeText = '0MB',
-  downloadedSpeedText = '0KB/s',
-  expireDate = '',
-  errorMessage = '',
+  downloadedSizeText = "0MB",
+  totalSizeText = "0MB",
+  downloadedSpeedText = "0KB/s",
+  expireDate = "",
+  errorMessage = "",
   onClose,
   onStartDownload,
 }) => {
   const navigate = useNavigate();
   const cancelButtonRef = useRef<HTMLButtonElement>(null);
   const width = 320;
-  const [countdownText, setCountdownText] = useState('');
+  const [countdownText, setCountdownText] = useState("");
 
   useEffect(() => {
     if (!expireDate) {
-      setCountdownText('');
+      setCountdownText("");
       return;
     }
 
@@ -76,12 +70,11 @@ const CosDownloadDialog: React.FC<CosDownloadDialogProps> = ({
     const hmsMatch = expireDate.match(/^(\d{1,2}):(\d{1,2}):(\d{1,2})$/);
     if (hmsMatch) {
       const [, h, m, s] = hmsMatch;
-      let remainSeconds =
-        Number(h) * 3600 + Number(m) * 60 + Number(s);
+      let remainSeconds = Number(h) * 3600 + Number(m) * 60 + Number(s);
 
       const updateHmsCountdown = () => {
         if (remainSeconds <= 0) {
-          setCountdownText('已到期');
+          setCountdownText("已到期");
           return;
         }
         setCountdownText(formatRemaining(remainSeconds));
@@ -106,7 +99,7 @@ const CosDownloadDialog: React.FC<CosDownloadDialogProps> = ({
       const now = Date.now();
       const diffMs = targetTime - now;
       if (diffMs <= 0) {
-        setCountdownText('已到期');
+        setCountdownText("已到期");
         return;
       }
       setCountdownText(formatRemaining(Math.floor(diffMs / 1000)));
@@ -128,17 +121,17 @@ const CosDownloadDialog: React.FC<CosDownloadDialogProps> = ({
 
   const mainIconStyle = {
     color: cMainColor,
-    borderRadius: '50%',
-    fontSize: '80px',
+    borderRadius: "50%",
+    fontSize: "80px",
   };
 
-  const showCloseButton = status !== 'downloading';
+  const showCloseButton = status !== "downloading";
 
   return (
     <Dialog
       open={open}
       onClose={(_, reason) => {
-        if (reason === 'backdropClick' || reason === 'escapeKeyDown') {
+        if (reason === "backdropClick" || reason === "escapeKeyDown") {
           return;
         }
         onClose();
@@ -146,12 +139,12 @@ const CosDownloadDialog: React.FC<CosDownloadDialogProps> = ({
       slotProps={{
         paper: {
           sx: {
-            backgroundColor: 'transparent',
-            color: 'white',
-            minWidth: '300px',
+            backgroundColor: "transparent",
+            color: "white",
+            minWidth: "300px",
             width,
-            borderRadius: '12px',
-            boxShadow: 'none',
+            borderRadius: "12px",
+            boxShadow: "none",
           },
         },
       }}
@@ -159,39 +152,37 @@ const CosDownloadDialog: React.FC<CosDownloadDialogProps> = ({
       {/* 上方 icon */}
       <Box
         sx={{
-          position: 'absolute',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+          position: "absolute",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
           width,
           zIndex: 1,
-          pointerEvents: 'none',
+          pointerEvents: "none",
         }}
       >
-        <FileDownloadIcon
-          sx={{ ...mainIconStyle, backgroundColor: 'rgb(45, 45, 45)' }}
-        />
+        <FileDownloadIcon sx={{ ...mainIconStyle, backgroundColor: "rgb(45, 45, 45)" }} />
       </Box>
 
       {/* icon 預留空間 */}
-      <Box sx={{ height: '40px' }} />
+      <Box sx={{ height: "40px" }} />
 
       {/* 主要內容區 */}
       <Box
         sx={{
-          borderRadius: '12px',
-          backgroundColor: 'rgb(45, 45, 45)',
-          overflow: 'hidden',
+          borderRadius: "12px",
+          backgroundColor: "rgb(45, 45, 45)",
+          overflow: "hidden",
         }}
       >
         {/* 標題列 */}
         <DialogTitle
           sx={{
-            display: 'flex',
-            justifyContent: 'flex-end',
-            alignItems: 'center',
-            padding: showCloseButton ? '4px 12px' : '0 12px',
-            minHeight: '40px',
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
+            padding: showCloseButton ? "4px 12px" : "0 12px",
+            minHeight: "40px",
           }}
         >
           {showCloseButton && (
@@ -203,7 +194,7 @@ const CosDownloadDialog: React.FC<CosDownloadDialogProps> = ({
               sx={{
                 color: cWhite80,
                 zIndex: 4,
-                position: 'relative',
+                position: "relative",
               }}
             >
               <CloseIcon />
@@ -212,28 +203,28 @@ const CosDownloadDialog: React.FC<CosDownloadDialogProps> = ({
         </DialogTitle>
 
         {/* 內容 */}
-        <DialogContent sx={{ padding: '20px 24px' }}>
+        <DialogContent sx={{ padding: "20px 24px" }}>
           <DialogContentText
             sx={{
               color: cWhite80,
-              textAlign: 'center',
-              padding: '10px 0px',
-              fontSize: '22px',
+              textAlign: "center",
+              padding: "10px 0px",
+              fontSize: "22px",
             }}
           >
             下载影片
           </DialogContentText>
 
           {/* confirm */}
-          {status === 'confirm' && (
+          {status === "confirm" && (
             <>
               <DialogContentText
                 sx={{
                   color: cWhite80,
-                  textAlign: 'left',
-                  fontSize: '16px',
+                  textAlign: "left",
+                  fontSize: "16px",
                   lineHeight: 1.7,
-                  minHeight: '84px',
+                  minHeight: "84px",
                 }}
               >
                 点选下载后请于24小时内完成，
@@ -244,37 +235,34 @@ const CosDownloadDialog: React.FC<CosDownloadDialogProps> = ({
               <DialogContentText
                 sx={{
                   color: cWhite80,
-                  textAlign: 'center',
-                  fontSize: '16px',
+                  textAlign: "center",
+                  fontSize: "16px",
                   mt: 2,
                 }}
               >
                 {expireDate ? (
                   <>
-                    <br />
-                    ● 下载券到期时间：{countdownText}
+                    <br />● 下载券到期时间：{countdownText}
                   </>
                 ) : (
-                  <>
-                    ● 使用下载券：{usedCouponCount}
-                  </>
+                  <>● 使用下载券：{usedCouponCount}</>
                 )}
               </DialogContentText>
             </>
           )}
 
           {/* noCoupon */}
-          {status === 'noCoupon' && (
+          {status === "noCoupon" && (
             <DialogContentText
               sx={{
-                color: '#ff5252',
-                textAlign: 'center',
-                fontSize: '18px',
+                color: "#ff5252",
+                textAlign: "center",
+                fontSize: "18px",
                 lineHeight: 1.7,
-                minHeight: '84px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
+                minHeight: "84px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
               }}
             >
               目前尚无下载券，
@@ -284,13 +272,13 @@ const CosDownloadDialog: React.FC<CosDownloadDialogProps> = ({
           )}
 
           {/* downloading */}
-          {status === 'downloading' && (
+          {status === "downloading" && (
             <Box sx={{ mt: 1 }}>
               <DialogContentText
                 sx={{
                   color: cWhite80,
-                  textAlign: 'left',
-                  fontSize: '16px',
+                  textAlign: "left",
+                  fontSize: "16px",
                   lineHeight: 1.7,
                   mb: 2,
                 }}
@@ -300,10 +288,10 @@ const CosDownloadDialog: React.FC<CosDownloadDialogProps> = ({
 
               <Typography
                 sx={{
-                  textAlign: 'center',
+                  textAlign: "center",
                   color: cWhite80,
-                  fontSize: '22px',
-                  fontWeight: 'bold',
+                  fontSize: "22px",
+                  fontWeight: "bold",
                   mb: 1,
                 }}
               >
@@ -315,37 +303,37 @@ const CosDownloadDialog: React.FC<CosDownloadDialogProps> = ({
                 value={progress}
                 sx={{
                   height: 8,
-                  borderRadius: '999px',
-                  backgroundColor: '#666',
+                  borderRadius: "999px",
+                  backgroundColor: "#666",
                   mb: 1.5,
-                  '& .MuiLinearProgress-bar': {
+                  "& .MuiLinearProgress-bar": {
                     backgroundColor: cMainColor,
-                    borderRadius: '999px',
+                    borderRadius: "999px",
                   },
                 }}
               />
 
               <Box
                 sx={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
                   mb: 2,
                 }}
               >
-                <Typography sx={{ color: cWhite80, fontSize: '14px' }}>
+                <Typography sx={{ color: cWhite80, fontSize: "14px" }}>
                   {downloadedSpeedText}
                 </Typography>
-                <Typography sx={{ color: cWhite80, fontSize: '14px' }}>
+                <Typography sx={{ color: cWhite80, fontSize: "14px" }}>
                   {downloadedSizeText} / {totalSizeText}
                 </Typography>
               </Box>
 
               <Typography
                 sx={{
-                  textAlign: 'center',
-                  color: '#ff5252',
-                  fontSize: '14px',
+                  textAlign: "center",
+                  color: "#ff5252",
+                  fontSize: "14px",
                 }}
               >
                 欲取消请关闭APP
@@ -354,16 +342,16 @@ const CosDownloadDialog: React.FC<CosDownloadDialogProps> = ({
           )}
 
           {/* success */}
-          {status === 'success' && (
+          {status === "success" && (
             <DialogContentText
               sx={{
                 color: cWhite80,
-                textAlign: 'left',
-                fontSize: '16px',
+                textAlign: "left",
+                fontSize: "16px",
                 lineHeight: 1.7,
-                minHeight: '84px',
-                display: 'flex',
-                alignItems: 'center',
+                minHeight: "84px",
+                display: "flex",
+                alignItems: "center",
               }}
             >
               此影片已下载完成，
@@ -373,16 +361,16 @@ const CosDownloadDialog: React.FC<CosDownloadDialogProps> = ({
           )}
 
           {/* fail */}
-          {status === 'fail' && (
+          {status === "fail" && (
             <DialogContentText
               sx={{
                 color: cWhite80,
-                textAlign: 'left',
-                fontSize: '16px',
+                textAlign: "left",
+                fontSize: "16px",
                 lineHeight: 1.7,
-                minHeight: '84px',
-                display: 'flex',
-                alignItems: 'center',
+                minHeight: "84px",
+                display: "flex",
+                alignItems: "center",
               }}
             >
               发生错误，
@@ -395,25 +383,25 @@ const CosDownloadDialog: React.FC<CosDownloadDialogProps> = ({
         {/* 按鈕區 */}
         <DialogActions
           sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            gap: '20px',
-            padding: '16px 24px',
+            display: "flex",
+            justifyContent: "center",
+            gap: "20px",
+            padding: "16px 24px",
           }}
         >
-          {status === 'confirm' && (
+          {status === "confirm" && (
             <>
               <Button
                 ref={cancelButtonRef}
                 onClick={handleClose}
                 sx={{
-                  width: '120px',
-                  fontWeight: 'bold',
-                  color: 'white',
+                  width: "120px",
+                  fontWeight: "bold",
+                  color: "white",
                   border: `2px solid ${cWhite80}`,
-                  borderRadius: '10px',
-                  '&:hover': {
-                    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                  borderRadius: "10px",
+                  "&:hover": {
+                    backgroundColor: "rgba(255, 255, 255, 0.08)",
                   },
                 }}
               >
@@ -424,12 +412,12 @@ const CosDownloadDialog: React.FC<CosDownloadDialogProps> = ({
                 onClick={onStartDownload}
                 variant="contained"
                 sx={{
-                  width: '120px',
-                  fontWeight: 'bold',
+                  width: "120px",
+                  fontWeight: "bold",
                   backgroundColor: cMainColor,
-                  borderRadius: '10px',
-                  color: 'white',
-                  '&:hover': {
+                  borderRadius: "10px",
+                  color: "white",
+                  "&:hover": {
                     backgroundColor: `${cMainColor}dd`,
                   },
                 }}
@@ -439,19 +427,19 @@ const CosDownloadDialog: React.FC<CosDownloadDialogProps> = ({
             </>
           )}
 
-          {(status === 'noCoupon' ) && (
+          {status === "noCoupon" && (
             <>
               <Button
                 ref={cancelButtonRef}
                 onClick={handleClose}
                 sx={{
-                  width: '120px',
-                  fontWeight: 'bold',
-                  color: 'white',
+                  width: "120px",
+                  fontWeight: "bold",
+                  color: "white",
                   border: `2px solid ${cWhite80}`,
-                  borderRadius: '10px',
-                  '&:hover': {
-                    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                  borderRadius: "10px",
+                  "&:hover": {
+                    backgroundColor: "rgba(255, 255, 255, 0.08)",
                   },
                 }}
               >
@@ -459,17 +447,15 @@ const CosDownloadDialog: React.FC<CosDownloadDialogProps> = ({
               </Button>
 
               <Button
-                onClick={() =>
-                  navigate('/sponsor', { state: { tab: 'download' } })
-                }
+                onClick={() => navigate("/sponsor", { state: { tab: "download" } })}
                 variant="contained"
                 sx={{
-                  width: '120px',
-                  fontWeight: 'bold',
+                  width: "120px",
+                  fontWeight: "bold",
                   backgroundColor: cMainColor,
-                  borderRadius: '10px',
-                  color: 'white',
-                  '&:hover': {
+                  borderRadius: "10px",
+                  color: "white",
+                  "&:hover": {
                     backgroundColor: `${cMainColor}dd`,
                   },
                 }}
@@ -479,17 +465,17 @@ const CosDownloadDialog: React.FC<CosDownloadDialogProps> = ({
             </>
           )}
 
-          {(status === 'fail') && (
+          {status === "fail" && (
             <Button
               onClick={onClose}
               variant="contained"
               sx={{
-                width: '120px',
-                fontWeight: 'bold',
+                width: "120px",
+                fontWeight: "bold",
                 backgroundColor: cMainColor,
-                borderRadius: '10px',
-                color: 'white',
-                '&:hover': {
+                borderRadius: "10px",
+                color: "white",
+                "&:hover": {
                   backgroundColor: `${cMainColor}dd`,
                 },
               }}
@@ -497,19 +483,19 @@ const CosDownloadDialog: React.FC<CosDownloadDialogProps> = ({
               关闭
             </Button>
           )}
-          {(status === 'success') && (
+          {status === "success" && (
             <>
               <Button
                 ref={cancelButtonRef}
                 onClick={handleClose}
                 sx={{
-                  width: '120px',
-                  fontWeight: 'bold',
-                  color: 'white',
+                  width: "120px",
+                  fontWeight: "bold",
+                  color: "white",
                   border: `2px solid ${cWhite80}`,
-                  borderRadius: '10px',
-                  '&:hover': {
-                    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                  borderRadius: "10px",
+                  "&:hover": {
+                    backgroundColor: "rgba(255, 255, 255, 0.08)",
                   },
                 }}
               >
@@ -517,15 +503,15 @@ const CosDownloadDialog: React.FC<CosDownloadDialogProps> = ({
               </Button>
 
               <Button
-                onClick={() => navigate('/my/downloads/1')}
+                onClick={() => navigate("/my/downloads/1")}
                 variant="contained"
                 sx={{
-                  width: '120px',
-                  fontWeight: 'bold',
+                  width: "120px",
+                  fontWeight: "bold",
                   backgroundColor: cMainColor,
-                  borderRadius: '10px',
-                  color: 'white',
-                  '&:hover': {
+                  borderRadius: "10px",
+                  color: "white",
+                  "&:hover": {
                     backgroundColor: `${cMainColor}dd`,
                   },
                 }}

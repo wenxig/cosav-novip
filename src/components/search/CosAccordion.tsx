@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Typography,
-} from "@mui/material";
+import { Accordion, AccordionSummary, AccordionDetails, Typography } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { cBasePanel } from "../../data/ColorDef";
 
@@ -50,9 +45,7 @@ const CosAccordion: React.FC<CosAccordionProps> = ({ title, children }) => {
       >
         <Typography sx={{ fontWeight: 500 }}>{title}</Typography>
       </AccordionSummary>
-      <AccordionDetails sx={{ padding: "0 16px 16px", mx: "8px" }}>
-        {children}
-      </AccordionDetails>
+      <AccordionDetails sx={{ padding: "0 16px 16px", mx: "8px" }}>{children}</AccordionDetails>
     </Accordion>
   );
 };

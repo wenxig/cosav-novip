@@ -1,27 +1,22 @@
-import React from 'react';
-import { checkIsLogin } from '../../../Shared/function/AccountFunction';
-import CosConfirmDialog from '../CosConfirmDialog';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import { checkIsLogin } from "../../../Shared/function/AccountFunction";
+import CosConfirmDialog from "../CosConfirmDialog";
+import { useNavigate } from "react-router-dom";
 
 interface CosCheckIsLoginProps {
   open: boolean;
   onCancel: () => void;
 }
 
-
-const CosCheckIsLogin: React.FC<CosCheckIsLoginProps> = ({
-  open,
-  onCancel,
-}) => {
-
+const CosCheckIsLogin: React.FC<CosCheckIsLoginProps> = ({ open, onCancel }) => {
   const navigate = useNavigate();
 
   const handleConfirmSubmit = () => {
     onCancel();
-    navigate('/login');
-  }
+    navigate("/login");
+  };
 
-  if(!open || checkIsLogin()){
+  if (!open || checkIsLogin()) {
     return null;
   }
 
@@ -38,4 +33,4 @@ const CosCheckIsLogin: React.FC<CosCheckIsLoginProps> = ({
   );
 };
 
-export default CosCheckIsLogin; 
+export default CosCheckIsLogin;

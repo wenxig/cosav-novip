@@ -6,12 +6,12 @@ import { channelUtil } from "./ChannelUtil";
  * 追踪事件类型
  */
 export type TrackEventType =
-  | "app_install"  // 应用安装（首次启动）
-  | "app_open"     // 应用打开
-  | "register"     // 用户注册
-  | "login"        // 用户登录
-  | "video_view"   // 视频观看
-  | "album_view";  // 相册观看
+  | "app_install" // 应用安装（首次启动）
+  | "app_open" // 应用打开
+  | "register" // 用户注册
+  | "login" // 用户登录
+  | "video_view" // 视频观看
+  | "album_view"; // 相册观看
 
 /**
  * 追踪事件参数

@@ -140,9 +140,7 @@ const VideoInfo: React.FC<VideoInfoProps> = ({ video, album }) => {
                   >
                     {text}
                   </Typography>
-                  {index < item.value!.length - 1 && (
-                    <span style={{ color: "white" }}>, </span>
-                  )}
+                  {index < item.value!.length - 1 && <span style={{ color: "white" }}>, </span>}
                 </React.Fragment>
               ))}
             </Box>
@@ -188,9 +186,7 @@ const VideoInfo: React.FC<VideoInfoProps> = ({ video, album }) => {
                     >
                       {item}
                     </span>
-                    {index < tagItems.length - 1 && (
-                      <span style={{ color: "white" }}> , </span>
-                    )}
+                    {index < tagItems.length - 1 && <span style={{ color: "white" }}> , </span>}
                   </React.Fragment>
                 ))}
               </Box>

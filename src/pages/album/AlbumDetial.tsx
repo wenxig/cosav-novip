@@ -6,7 +6,6 @@ import { getAlbumInfo } from "../../Shared/Api/CosApi";
 import { useParams } from "react-router-dom";
 import VideoTitle from "../../components/video/VideoTitle";
 import VideoInfo from "../../components/video/VideoInfo";
-import CosAdIFrame from "../../components/CosAdIFrame";
 import CosGridFrame from "../../components/CosGridFrame";
 import TopTitleBar from "../../components/TopTitleBar";
 import { ifAlbumApiResponse } from "../../Shared/Api/interface/AlbumInterface";
@@ -101,11 +100,7 @@ function AlbumDetial() {
       >
         <TopTitleBar title={"相簿详情"} defaultBackPath="/home" />
 
-        <AlbumCover
-          albumId={albumId!}
-          photoUrl={photoUrl!}
-          pageCount={apiData.total_photos}
-        />
+        <AlbumCover albumId={albumId!} photoUrl={photoUrl!} pageCount={apiData.total_photos} />
 
         {/* 影片標題 */}
         <VideoTitle title={apiData.title} backgroundColor={"black"} />
@@ -113,25 +108,12 @@ function AlbumDetial() {
         {/* 觀看人數 感謝廠商 */}
         <ViewerAndFavorite viewer={apiData.total_views} albumId={albumId!} />
 
-        <CosAdIFrame adType="VIDEO_COVER" pageName={"albumDetial"} />
-
         <VideoInfo album={apiData} />
 
-        <Typography sx={{ color: "white", ml: 2, fontSize: "22px" }}>
-          相关视频
-        </Typography>
-        <CosGridFrame
-          albums={apiData.related.slice(0, 4)}
-          column={2}
-          isReplace={true}
-        />
-        <CosAdIFrame adType="VIDEO_INFO" pageName={"albumDetial"} />
+        <Typography sx={{ color: "white", ml: 2, fontSize: "22px" }}>相关视频</Typography>
+        <CosGridFrame albums={apiData.related.slice(0, 4)} column={2} isReplace={true} />
         {apiData.related.length > 4 && (
-          <CosGridFrame
-            albums={apiData.related.slice(4)}
-            column={2}
-            isReplace={true}
-          />
+          <CosGridFrame albums={apiData.related.slice(4)} column={2} isReplace={true} />
         )}
 
         <Box sx={{ height: 30 }}></Box>

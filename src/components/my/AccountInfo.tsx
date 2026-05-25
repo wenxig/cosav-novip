@@ -1,18 +1,19 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Box, Button, Dialog, DialogActions, DialogContent, IconButton, Link, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  IconButton,
+  Link,
+  Typography,
+} from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import { useNavigate } from "react-router-dom";
-import {
-  checkIsLogin,
-  checkIsPay,
-} from "../../Shared/function/AccountFunction";
+import { checkIsLogin, checkIsPay } from "../../Shared/function/AccountFunction";
 import RefreshRoundedIcon from "@mui/icons-material/RefreshRounded";
-import {
-  cMainColor,
-  cWhite60,
-  cMainColor3,
-  cDisabledColor,
-} from "../../data/ColorDef";
+import { cMainColor, cWhite60, cMainColor3, cDisabledColor } from "../../data/ColorDef";
 import CircularProgressWithValue from "../base/CircularProgressWithValue";
 import { getUserInfo } from "../../data/DataCenter";
 import { getAuthActivity } from "../../Shared/Api/CosApi";
@@ -73,9 +74,7 @@ const AccountInfo: React.FC = () => {
             navigate("/login");
           }}
         >
-          <Typography sx={{ color: "white", fontWeight: "bold" }}>
-            登入/注册
-          </Typography>
+          <Typography sx={{ color: "white", fontWeight: "bold" }}>登入/注册</Typography>
         </Button>
       </Box>
     );
@@ -185,9 +184,7 @@ const AccountInfo: React.FC = () => {
           padding: "10px 20px",
         }}
       >
-        <Typography
-          sx={{ fontSize: "14px", color: "white", fontWeight: "bold" }}
-        >
+        <Typography sx={{ fontSize: "14px", color: "white", fontWeight: "bold" }}>
           Wellcome {userInfo.username}
         </Typography>
       </Box>
@@ -198,8 +195,7 @@ const AccountInfo: React.FC = () => {
           display: "flex",
           flexDirection: "column",
           gap: 1,
-          background:
-            userInfo?.user_info.premium === "1" ? vipGradient : normalGradient,
+          background: userInfo?.user_info.premium === "1" ? vipGradient : normalGradient,
           borderRadius: "10px",
           padding: "20px 20px",
         }}
@@ -210,9 +206,7 @@ const AccountInfo: React.FC = () => {
         </Typography>
 
         {/* Email */}
-        <Typography sx={{ fontSize: "12px", color: "white" }}>
-          {userInfo.email}
-        </Typography>
+        <Typography sx={{ fontSize: "12px", color: "white" }}>{userInfo.email}</Typography>
 
         {/* 贊助狀態 */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
@@ -232,8 +226,7 @@ const AccountInfo: React.FC = () => {
             <IconButton
               onClick={handleRefresh}
               sx={{
-                color:
-                  userInfo.user_info.premium === "1" ? "#ab885fff" : cMainColor,
+                color: userInfo.user_info.premium === "1" ? "#ab885fff" : cMainColor,
                 padding: "4px",
               }}
             >
@@ -261,8 +254,7 @@ const AccountInfo: React.FC = () => {
             px: 1.5,
             py: 0.5,
             borderRadius: 5,
-            background:
-              userInfo?.user_info.premium === "1" ? "#ab885fff" : cMainColor,
+            background: userInfo?.user_info.premium === "1" ? "#ab885fff" : cMainColor,
             cursor: "pointer",
             width: "fit-content",
             textDecorationLine: "none",
@@ -295,8 +287,7 @@ const AccountInfo: React.FC = () => {
             alignItems: "center",
             border: "3px solid transparent",
             borderRadius: "50%",
-            backgroundColor:
-              userInfo?.user_info.premium === "1" ? "#f3c591ff" : cDisabledColor,
+            backgroundColor: userInfo?.user_info.premium === "1" ? "#f3c591ff" : cDisabledColor,
             WebkitBackgroundClip: "border-box",
             backgroundClip: "border-box",
           }}

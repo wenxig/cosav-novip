@@ -2,11 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import BaseMotionDiv from "./BaseMotionDiv";
 import { useNavigate, useParams } from "react-router-dom";
-import {
-  getAlbumList,
-  getVideoList,
-  getVideoRecommend,
-} from "../Shared/Api/CosApi";
+import { getAlbumList, getVideoList, getVideoRecommend } from "../Shared/Api/CosApi";
 import {
   pEachPageCount,
   MAX_HISTORY,
@@ -30,7 +26,7 @@ export interface ifQueryResult {
 
 function SearchPage() {
   const navigate = useNavigate();
-  const { from,type, queryStr, page } = useParams();
+  const { from, type, queryStr, page } = useParams();
   const fromUrl = from || "/home";
   const [queryType, setQueryType] = useState(type || "video");
   const [queryString, setQueryString] = useState(queryStr || "");
@@ -38,9 +34,7 @@ function SearchPage() {
   const [currentPage, setCurrentPage] = useState(page ? parseInt(page) : 1);
   const [searchHistory, setSearchHistory] = useState<string[]>([]);
 
-  const [windowWidth, setWindowWidth] = useState(
-    document.documentElement.clientWidth
-  );
+  const [windowWidth, setWindowWidth] = useState(document.documentElement.clientWidth);
 
   useEffect(() => {
     window.addEventListener("resize", () => {
@@ -124,14 +118,11 @@ function SearchPage() {
       revalidateOnReconnect: false,
       dedupingInterval: API_DEDUPING_INTERVAL, //
       revalidateIfStale: false,
-    }
+    },
   );
 
   // 處理頁面變動
-  const handlePageChange = (
-    event: React.ChangeEvent<unknown>,
-    value: number
-  ) => {
+  const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setCurrentPage(value);
     navigate(`/search/${queryType}/${queryString}/${value}`, { replace: true });
   };
@@ -158,10 +149,7 @@ function SearchPage() {
         // 限制數量
         const limitedHistory = newHistory.slice(0, MAX_HISTORY);
         // 保存到本地存儲
-        localStorage.setItem(
-          SEARCH_HISTORY_KEY,
-          JSON.stringify(limitedHistory)
-        );
+        localStorage.setItem(SEARCH_HISTORY_KEY, JSON.stringify(limitedHistory));
         return limitedHistory;
       });
     } catch (error) {
@@ -170,12 +158,8 @@ function SearchPage() {
   };
 
   const parms = queryString.split("&");
-  const kwStr = parms
-    .find((item) => item.startsWith("kw="))
-    ?.replace("kw=", "");
-  const tagStr = parms
-    .find((item) => item.startsWith("tags="))
-    ?.replace("tags=", "");
+  const kwStr = parms.find((item) => item.startsWith("kw="))?.replace("kw=", "");
+  const tagStr = parms.find((item) => item.startsWith("tags="))?.replace("tags=", "");
 
   return (
     <BaseMotionDiv>
@@ -188,7 +172,7 @@ function SearchPage() {
           gap: 12, //設定子元件間距
         }}
       >
-        <SearchTopBar onSearch={handleSearch} backUrl={fromUrl}/>
+        <SearchTopBar onSearch={handleSearch} backUrl={fromUrl} />
 
         {!queryString && (
           <CosAccordion title="如何搜寻？">
@@ -295,10 +279,7 @@ function SearchPage() {
               height: "100%",
             }}
           >
-            <Typography
-              variant="h5"
-              sx={{ color: "white", fontWeight: "bold" }}
-            >
+            <Typography variant="h5" sx={{ color: "white", fontWeight: "bold" }}>
               相關推薦
             </Typography>
           </Box>

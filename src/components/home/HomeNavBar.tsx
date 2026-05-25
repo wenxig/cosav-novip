@@ -14,8 +14,7 @@ const MyNavButton: React.FC<ifCategoryItem> = (category: ifCategoryItem) => {
     "2": "/icons/av.png",
     "1": "/icons/doujin.png",
   };
-  const iconUrl =
-    customIcons[category.CHID] || category.icon || category.photo || undefined;
+  const iconUrl = customIcons[category.CHID] || category.icon || category.photo || undefined;
   return (
     <Box
       onClick={() => {

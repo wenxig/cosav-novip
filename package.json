@@ -1,4 +1,9 @@
 {
+  "version": "3.0.2",
+  "scripts": {
+    "dev": "vp dev",
+    "prepare": "vp config"
+  },
   "dependencies": {
     "@capacitor/app": "^7.0.2",
     "@capacitor/cli": "^7.4.2",
@@ -54,15 +59,11 @@
     "web-vitals": "^5.1.0",
     "zustand": "^5.0.7"
   },
-  "version": "3.0.2",
-  "scripts": {
-    "dev": "vp dev",
-    "prepare": "vp config"
-  },
   "devDependencies": {
     "terser": "^5.43.1",
     "vite-plus": "latest"
   },
+  "packageManager": "pnpm@11.3.0",
   "pnpm": {
     "overrides": {
       "vite": "npm:@voidzero-dev/vite-plus-core@latest",
@@ -75,6 +76,5 @@
       "core-js",
       "esbuild"
     ]
-  },
-  "packageManager": "pnpm@11.3.0"
+  }
 }

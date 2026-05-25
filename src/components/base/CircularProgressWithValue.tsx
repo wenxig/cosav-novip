@@ -1,13 +1,11 @@
 import * as React from "react";
-import CircularProgress, {
-  CircularProgressProps,
-} from "@mui/material/CircularProgress";
+import CircularProgress, { CircularProgressProps } from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { cMainColor } from "../../data/ColorDef";
 
 function CircularProgressWithLabel(
-  props: CircularProgressProps & { nowProgress: number; maxProgress: number ,size? : number}
+  props: CircularProgressProps & { nowProgress: number; maxProgress: number; size?: number },
 ) {
   const progressStyle = {
     color: cMainColor,
@@ -41,7 +39,7 @@ function CircularProgressWithLabel(
         <Typography
           variant="caption"
           component="div"
-          sx={{ color: 'white',fontWeight:'bold' }}
+          sx={{ color: "white", fontWeight: "bold" }}
         >{`${Math.round(props.nowProgress)}`}</Typography>
       </Box>
     </Box>
@@ -60,11 +58,7 @@ const CircularProgressWithValue: React.FC<CircularProgressWithValueProps> = ({
   size = 30,
 }) => {
   return (
-    <CircularProgressWithLabel
-      nowProgress={nowProgress}
-      maxProgress={maxProgress}
-      size={size}
-    />
+    <CircularProgressWithLabel nowProgress={nowProgress} maxProgress={maxProgress} size={size} />
   );
 };
 

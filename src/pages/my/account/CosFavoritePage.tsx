@@ -1,9 +1,8 @@
-import React, {useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, CircularProgress, Button, Typography } from "@mui/material";
 import { cMainColor, cWhite60 } from "../../../data/ColorDef";
 
 import useSWR from "swr";
-
 
 import TopTitleBar from "../../../components/TopTitleBar";
 import { useNavigate, useParams } from "react-router-dom";
@@ -11,7 +10,10 @@ import BaseMotionDiv from "../../BaseMotionDiv";
 import CosGridFrame from "../../../components/CosGridFrame";
 import CosPagination from "../../../components/base/CosPagination";
 import { getAuthFavoriteAlbumLists, getAuthFavoriteVideoLists } from "../../../Shared/Api/CosApi";
-import { ifAuthFavoriteAlbum, ifAuthFavoriteVideo } from "../../../Shared/Api/interface/AuthInterface";
+import {
+  ifAuthFavoriteAlbum,
+  ifAuthFavoriteVideo,
+} from "../../../Shared/Api/interface/AuthInterface";
 import { pEachPageCount } from "../../../data/ParameterDef";
 
 export interface ifQueryResult {
@@ -21,20 +23,20 @@ export interface ifQueryResult {
 }
 
 function CosFavoritePage() {
-  const { type,page } = useParams();
+  const { type, page } = useParams();
   const navigate = useNavigate();
-  
-  const [queryType, setQueryType] = useState(type || 'video');
+
+  const [queryType, setQueryType] = useState(type || "video");
   const [currentPage, setCurrentPage] = useState(page ? parseInt(page) : 1);
 
   const [windowWidth, setWindowWidth] = useState(document.documentElement.clientWidth);
 
   useEffect(() => {
-    window.addEventListener('resize', () => {
+    window.addEventListener("resize", () => {
       setWindowWidth(document.documentElement.clientWidth);
     });
     return () => {
-      window.removeEventListener('resize', () => {
+      window.removeEventListener("resize", () => {
         setWindowWidth(document.documentElement.clientWidth);
       });
     };
@@ -44,7 +46,7 @@ function CosFavoritePage() {
   useEffect(() => {
     window.scrollTo({
       top: 0,
-      behavior: 'auto'
+      behavior: "auto",
     });
   }, [page]);
 
@@ -59,36 +61,40 @@ function CosFavoritePage() {
   const handleTypeChange = (newType: string) => {
     setQueryType(newType);
     setCurrentPage(1);
-    navigate(`/my/favorite/${newType}/1`,{replace:true});
+    navigate(`/my/favorite/${newType}/1`, { replace: true });
   };
 
   const fetcher = async (): Promise<ifQueryResult | undefined> => {
-    if(queryType === 'video'){
-      const res = await getAuthFavoriteVideoLists((currentPage - 1),pEachPageCount);
-      if(res.result === 'success'){
-        return {videoList: res.data ,totalItems: parseInt(res.data!.totalCnt)};
+    if (queryType === "video") {
+      const res = await getAuthFavoriteVideoLists(currentPage - 1, pEachPageCount);
+      if (res.result === "success") {
+        return { videoList: res.data, totalItems: parseInt(res.data!.totalCnt) };
       }
-    }else{
-      const res = await getAuthFavoriteAlbumLists(currentPage-1,pEachPageCount);
-      if(res.result === 'success'){
-        return {albumList: res.data ,totalItems: parseInt(res.data!.totalCnt)};
+    } else {
+      const res = await getAuthFavoriteAlbumLists(currentPage - 1, pEachPageCount);
+      if (res.result === "success") {
+        return { albumList: res.data, totalItems: parseInt(res.data!.totalCnt) };
       }
     }
     return undefined;
   };
 
-  const { data, error, isLoading, mutate } = useSWR(`favoriteList${queryType}${currentPage}`, fetcher, {
-    revalidateOnFocus: true,
-    revalidateOnReconnect: true,
-    revalidateIfStale: true,
-    dedupingInterval: 0,
-    refreshInterval: 0
-  });
-  
+  const { data, error, isLoading, mutate } = useSWR(
+    `favoriteList${queryType}${currentPage}`,
+    fetcher,
+    {
+      revalidateOnFocus: true,
+      revalidateOnReconnect: true,
+      revalidateIfStale: true,
+      dedupingInterval: 0,
+      refreshInterval: 0,
+    },
+  );
+
   const handleDeletedVideo = (videoId: string) => {
     mutate((oldData: ifQueryResult | undefined) => {
       if (!oldData || !oldData.videoList) return oldData;
-      const newLists = oldData.videoList.lists.filter(item => item.id !== videoId);
+      const newLists = oldData.videoList.lists.filter((item) => item.id !== videoId);
       const newTotal = Math.max((oldData.totalItems || 0) - 1, 0);
       return {
         ...oldData,
@@ -105,7 +111,7 @@ function CosFavoritePage() {
   const handleDeletedAlbum = (albumId: string) => {
     mutate((oldData: ifQueryResult | undefined) => {
       if (!oldData || !oldData.albumList) return oldData;
-      const newLists = oldData.albumList.lists.filter(item => item.id !== albumId);
+      const newLists = oldData.albumList.lists.filter((item) => item.id !== albumId);
       const newTotal = Math.max((oldData.totalItems || 0) - 1, 0);
       return {
         ...oldData,
@@ -118,12 +124,11 @@ function CosFavoritePage() {
       };
     }, false);
   };
-  
+
   // 處理頁面變動
   const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setCurrentPage(value);
-    navigate(`/my/favorite/${queryType}/${value}`,{replace:true});
-    
+    navigate(`/my/favorite/${queryType}/${value}`, { replace: true });
   };
 
   //const windowWidth = document.documentElement.clientWidth;
@@ -137,56 +142,62 @@ function CosFavoritePage() {
           backgroundColor: "black",
           width: windowWidth,
           minHeight: "200%",
-          display: "grid",  
-          gap: 12,//設定子元件間距
+          display: "grid",
+          gap: 12, //設定子元件間距
         }}
       >
         <TopTitleBar title="我的收藏" backUrl="/my" />
-        <Box sx={{ 
-          display: 'flex', 
-          alignItems: 'center',
-          padding: '5px 5px',
-          gap: 2
-        }}>
-          <Box sx={{ 
-            display: 'flex', 
-            alignItems: 'center',
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            padding: "5px 5px",
             gap: 2,
-            flex: 1,
-          }}>
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 2,
+              flex: 1,
+            }}
+          >
             <Button
-              onClick={() => handleTypeChange('video')}
+              onClick={() => handleTypeChange("video")}
               sx={{
-                fontSize: '22px',
-                color: queryType === 'video' ? cMainColor : cWhite60,
-                textDecoration: queryType === 'video' ? 'underline' : 'none',
-                minWidth: 'auto',
-                padding: '4px 4px',
-                '&:hover': {
-                  backgroundColor: 'transparent'
-                }
+                fontSize: "22px",
+                color: queryType === "video" ? cMainColor : cWhite60,
+                textDecoration: queryType === "video" ? "underline" : "none",
+                minWidth: "auto",
+                padding: "4px 4px",
+                "&:hover": {
+                  backgroundColor: "transparent",
+                },
               }}
             >
               视频
             </Button>
 
-            <Box sx={{ 
-              width: '1px', 
-              height: '20px', 
-              backgroundColor: cWhite60 
-            }} />
+            <Box
+              sx={{
+                width: "1px",
+                height: "20px",
+                backgroundColor: cWhite60,
+              }}
+            />
 
             <Button
-              onClick={() => handleTypeChange('album')}
+              onClick={() => handleTypeChange("album")}
               sx={{
-                fontSize: '22px',
-                color: queryType === 'album' ? cMainColor : cWhite60,
-                textDecoration: queryType === 'album' ? 'underline' : 'none',
-                minWidth: 'auto',
-                padding: '4px 4px',
-                '&:hover': {
-                  backgroundColor: 'transparent'
-                }
+                fontSize: "22px",
+                color: queryType === "album" ? cMainColor : cWhite60,
+                textDecoration: queryType === "album" ? "underline" : "none",
+                minWidth: "auto",
+                padding: "4px 4px",
+                "&:hover": {
+                  backgroundColor: "transparent",
+                },
               }}
             >
               相簿
@@ -197,37 +208,37 @@ function CosFavoritePage() {
             收藏数量: {totalCount} / {maxCount}
           </Typography>
         </Box>
-        
-        {
-          isLoading&&
-            <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%'}}>
-              <CircularProgress />
-            </Box>
-        }
+
+        {isLoading && (
+          <Box
+            sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}
+          >
+            <CircularProgress />
+          </Box>
+        )}
 
         {/* 影片列表 */}
-        {
-        (!error&&data&&data.videoList)&&
+        {!error && data && data.videoList && (
           <CosGridFrame
             items={data.videoList.lists}
             column={2}
             delMode={true}
             onDeletedVideo={handleDeletedVideo}
           />
-        }
+        )}
 
         {/* 相簿列表 */}
-        {(!error&&data&&data.albumList)&&
+        {!error && data && data.albumList && (
           <CosGridFrame
             albums={data.albumList.lists}
             column={2}
             delMode={true}
             onDeletedAlbum={handleDeletedAlbum}
           />
-        }
-        
+        )}
+
         {/* 頁面控制器 */}
-        {(!error && data) && (
+        {!error && data && (
           <CosPagination
             totalItems={data.totalItems}
             currentPage={currentPage}
@@ -235,9 +246,9 @@ function CosFavoritePage() {
             pEachPageCount={pEachPageCount}
           />
         )}
-        
+
         {/* 增加空間,避免底部導航被蓋住 */}
-        <Box sx={{height:20}}></Box>
+        <Box sx={{ height: 20 }}></Box>
       </Box>
     </BaseMotionDiv>
   );

@@ -1,8 +1,8 @@
-import React from 'react';
-import { Box, IconButton, Typography } from '@mui/material';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { cBasePanel, cMainColor } from '../data/ColorDef';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import React from "react";
+import { Box, IconButton, Typography } from "@mui/material";
+import { useNavigate, useLocation } from "react-router-dom";
+import { cBasePanel, cMainColor } from "../data/ColorDef";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 interface TopTitleBarProps {
   title: string;
@@ -11,11 +11,11 @@ interface TopTitleBarProps {
   defaultBackPath?: string; // 當沒有 state.from 時的預設返回路徑
 }
 
-const TopTitleBar: React.FC<TopTitleBarProps> = ({ 
-  title = '', 
+const TopTitleBar: React.FC<TopTitleBarProps> = ({
+  title = "",
   backUrl,
   onBackClick = () => {},
-  defaultBackPath = '/home'
+  defaultBackPath = "/home",
 }) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -24,17 +24,17 @@ const TopTitleBar: React.FC<TopTitleBarProps> = ({
 
   const windowWidth = document.documentElement.clientWidth;
   const nowHistoryLength = window.history.length;
-  
+
   // 處理返回按鈕點擊
   const handleBackClick = () => {
     document.body.focus();
     onBackClick();
-    
+
     if (backUrl) {
       // 如果指定了固定的返回路徑，直接使用
       navigate(backUrl);
     } else {
-/**
+      /**
  *       //navigate(-1); // 返回上一頁
       if(window.history.length > nowHistoryLength){//因橫向轉時,會導致history長度增加(iframe原因)
         navigate((nowHistoryLength - window.history.length)*2);
@@ -45,7 +45,7 @@ const TopTitleBar: React.FC<TopTitleBarProps> = ({
       }else{
  * 
 */
-      if(window.history.length > nowHistoryLength){
+      if (window.history.length > nowHistoryLength) {
         // 檢查是否有從前一頁傳來的路徑
         const from = location.state?.from;
         if (from) {
@@ -55,64 +55,64 @@ const TopTitleBar: React.FC<TopTitleBarProps> = ({
           // 沒有記錄，使用預設路徑
           navigate(defaultBackPath);
         }
-      }else{
+      } else {
         navigate(-1);
       }
     }
   };
-  
+
   return (
     <>
       <Box
         sx={{
-          position: 'fixed',
+          position: "fixed",
           top: 0,
           left: 0,
           right: 0,
           zIndex: 1000,
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
           width: windowWidth,
           height: containerHeight,
           backgroundColor: cBasePanel,
-          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-          padding: '5px 10px',
-          boxSizing: 'border-box',
+          boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+          padding: "5px 10px",
+          boxSizing: "border-box",
         }}
       >
         {/* 返回按鈕 - 靠左對齊 */}
-        <IconButton 
+        <IconButton
           onClick={handleBackClick}
           sx={{
             color: cMainColor,
-            padding: '8px',
-            '&:hover': {
-              backgroundColor: 'rgba(255, 255, 255, 0.1)',
-            }
+            padding: "8px",
+            "&:hover": {
+              backgroundColor: "rgba(255, 255, 255, 0.1)",
+            },
           }}
         >
           <ArrowBackIcon />
         </IconButton>
-        
+
         {/* 標題文字 - 置中處理 */}
         <Typography
           variant="h6"
           sx={{
-            color: 'white',
-            fontWeight: 'bold',
+            color: "white",
+            fontWeight: "bold",
             flex: 1,
-            textAlign: 'center',
-            margin: '0 10px',
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
+            textAlign: "center",
+            margin: "0 10px",
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
           }}
         >
           {title}
         </Typography>
-        
+
         {/* 右側空白元素，保持標題置中 */}
         <Box sx={{ width: 40 }} />
       </Box>
@@ -123,4 +123,4 @@ const TopTitleBar: React.FC<TopTitleBarProps> = ({
   );
 };
 
-export default TopTitleBar; 
+export default TopTitleBar;

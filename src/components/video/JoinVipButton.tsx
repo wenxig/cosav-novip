@@ -52,10 +52,7 @@ const JoinVipButton: React.FC<JoinVipButtonProps> = ({
   // 處理按鈕點擊事件
   const handleClick = () => {
     // 如果是外部 URL，則使用 window.open 開啟
-    if (
-      redirectUrl.startsWith("http://") ||
-      redirectUrl.startsWith("https://")
-    ) {
+    if (redirectUrl.startsWith("http://") || redirectUrl.startsWith("https://")) {
       window.open(redirectUrl, "_blank");
     } else {
       // 否則使用 React Router 導航
@@ -71,11 +68,7 @@ const JoinVipButton: React.FC<JoinVipButtonProps> = ({
         fullWidth
         onClick={handleClick}
         startIcon={
-          <img
-            src="/icons/gold-crown.png"
-            alt="crown"
-            style={{ width: 20, height: 16 }}
-          />
+          <img src="/icons/gold-crown.png" alt="crown" style={{ width: 20, height: 16 }} />
         }
         sx={{
           backgroundColor: backgroundColor,

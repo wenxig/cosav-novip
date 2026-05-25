@@ -27,9 +27,7 @@ const GameTop10List: React.FC = () => {
   const otherGame = gameTop10.list.slice(1);
 
   return (
-    <Box
-      sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}
-    >
+    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
       <Typography
         variant="body2"
         sx={{
@@ -72,12 +70,7 @@ const GameTop10List: React.FC = () => {
       >
         {otherGame.map((item, index) => {
           return (
-            <GameCard
-              key={index + 1}
-              game={item}
-              rank={index + 2}
-              backgroundColor="#341965"
-            />
+            <GameCard key={index + 1} game={item} rank={index + 2} backgroundColor="#341965" />
           );
         })}
       </Box>

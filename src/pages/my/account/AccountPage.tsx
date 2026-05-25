@@ -23,9 +23,7 @@ export interface ifQueryResult {
 function AccountPage() {
   const navigate = useNavigate();
 
-  const [windowWidth, setWindowWidth] = useState(
-    document.documentElement.clientWidth
-  );
+  const [windowWidth, setWindowWidth] = useState(document.documentElement.clientWidth);
 
   useEffect(() => {
     window.addEventListener("resize", () => {
@@ -103,9 +101,7 @@ function AccountPage() {
             sx={{ ...iconButtonStyle, width: 200 }}
             onClick={() => setOpen(true)}
           >
-            <Typography sx={{ fontSize: 20, color: cMainColor }}>
-              退出登录
-            </Typography>
+            <Typography sx={{ fontSize: 20, color: cMainColor }}>退出登录</Typography>
           </Button>
         </Box>
 

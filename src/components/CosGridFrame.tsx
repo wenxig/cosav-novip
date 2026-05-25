@@ -1,8 +1,8 @@
-import React from 'react';
-import { Box } from '@mui/material';
-import CosGridCard from './CosGridCard';
-import { ifVideoBaseInfo } from '../Shared/Api/interface/VideoInterface';
-import { ifAlbumBaseInfo } from '../Shared/Api/interface/AlbumInterface';
+import React from "react";
+import { Box } from "@mui/material";
+import CosGridCard from "./CosGridCard";
+import { ifVideoBaseInfo } from "../Shared/Api/interface/VideoInterface";
+import { ifAlbumBaseInfo } from "../Shared/Api/interface/AlbumInterface";
 
 interface CosGridFrameProps {
   width?: number;
@@ -38,9 +38,7 @@ const CosGridFrame: React.FC<CosGridFrameProps> = ({
 
   // 根據 maxShowAmount 決定要顯示的項目
   const displayItems = maxShowAmount ? items?.slice(0, maxShowAmount) : items;
-  const displayAlbums = maxShowAmount
-    ? albums?.slice(0, maxShowAmount)
-    : albums;
+  const displayAlbums = maxShowAmount ? albums?.slice(0, maxShowAmount) : albums;
 
   const itemStyle = {
     width: cardWidth,
@@ -52,17 +50,17 @@ const CosGridFrame: React.FC<CosGridFrameProps> = ({
     <Box
       sx={{
         width: width,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
       }}
     >
       <Box
         sx={{
-          display: 'flex',
-          flexWrap: 'wrap',
+          display: "flex",
+          flexWrap: "wrap",
           gap: `${gap}px`,
-          justifyContent: 'flex-start',
+          justifyContent: "flex-start",
         }}
       >
         {/* 顯示影片列表 */}

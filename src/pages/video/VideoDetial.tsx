@@ -1,91 +1,81 @@
-import React, { useState, useEffect} from 'react';
-import { Box, Button, CircularProgress, Typography } from '@mui/material';
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import useSWR from 'swr';
-import { authUseExchangeTicket, checkExchangeTicket, getVideoInfo } from '../../Shared/Api/CosApi';
-import { useNavigate, useParams } from 'react-router-dom';
-import { ifVideoApiResponse } from '../../Shared/Api/interface/VideoInterface';
-import JoinVipButton from '../../components/video/JoinVipButton';
-import VideoTitle from '../../components/video/VideoTitle';
-import PlayerAndLineSelectBar from '../../components/video/PlayerAndLineSelectBar';
-import CosVideoPlayer from '../../components/video/CosVideoPlayer';
-import CosVideoPlayer2 from '../../components/video/CosVideoPlayer2';
-import ViewerAndThanks from '../../components/video/ViewerAndThanks';
-import VideoButtonBar from '../../components/video/VideoButtonBar';
-import VideoInfo from '../../components/video/VideoInfo';
-import CosAdIFrame from '../../components/CosAdIFrame';
-import CosGridFrame from '../../components/CosGridFrame';
-import TopTitleBar from '../../components/TopTitleBar';
-import BaseMotionDiv from '../BaseMotionDiv';
-import {
-  checkIsLogin,
-  checkIsVip,
-} from '../../Shared/function/AccountFunction';
-import CosCheckIsLogin from '../../components/base/check/CosCheckIsLogin';
-import CosCheckIsVip from '../../components/base/check/CosCheckIsVip';
-//import { API_DEDUPING_INTERVAL } from "../../data/ParameterDef";
-import CosRepeatedLogin from '../../components/base/check/CosRepeatedLogin';
-import CosVipOnlyFrame from '../../components/video/CosVipOnlyFrame';
-import { getSiteSetting } from '../../data/DataCenter';
-import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
-import { cBasePanel, cMainColor } from '../../data/ColorDef';
-import CosVideoCollection from '../../components/video/CosVideoCollection';
+import React, { useState, useEffect } from "react";
+import { Box, Button, CircularProgress, Typography } from "@mui/material";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
+import useSWR from "swr";
+import { authUseExchangeTicket, checkExchangeTicket, getVideoInfo } from "../../Shared/Api/CosApi";
+import { useNavigate, useParams } from "react-router-dom";
+import { ifVideoApiResponse } from "../../Shared/Api/interface/VideoInterface";
+import JoinVipButton from "../../components/video/JoinVipButton";
+import VideoTitle from "../../components/video/VideoTitle";
+import PlayerAndLineSelectBar from "../../components/video/PlayerAndLineSelectBar";
+import CosVideoPlayer from "../../components/video/CosVideoPlayer";
+import CosVideoPlayer2 from "../../components/video/CosVideoPlayer2";
+import ViewerAndThanks from "../../components/video/ViewerAndThanks";
+import VideoButtonBar from "../../components/video/VideoButtonBar";
+import VideoInfo from "../../components/video/VideoInfo";
+import CosGridFrame from "../../components/CosGridFrame";
+import TopTitleBar from "../../components/TopTitleBar";
+import BaseMotionDiv from "../BaseMotionDiv";
+import { checkIsLogin, checkIsVip } from "../../Shared/function/AccountFunction";
+import CosCheckIsLogin from "../../components/base/check/CosCheckIsLogin";
+import CosRepeatedLogin from "../../components/base/check/CosRepeatedLogin";
+import { getSiteSetting } from "../../data/DataCenter";
+import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined";
+import { cBasePanel, cMainColor } from "../../data/ColorDef";
+import CosVideoCollection from "../../components/video/CosVideoCollection";
 import {
   checkAndGetDownloadedFile,
   downloadVideo,
   getDownloadedFile,
   getLocalFileUrl,
   saveDownloadedVideoData,
-} from '../../Shared/Utils/VideoDownloadUtil';
-import { trackerUtil } from '../../Shared/Utils/TrackerUtil';
-import CosDownloadDialog, {
-  DownloadDialogStatus,
-} from '../../components/video/CosDownloadDialog';
+} from "../../Shared/Utils/VideoDownloadUtil";
+import { trackerUtil } from "../../Shared/Utils/TrackerUtil";
+import CosDownloadDialog, { DownloadDialogStatus } from "../../components/video/CosDownloadDialog";
 
 function VideoDetial() {
   const { videoId } = useParams();
 
-  const [videoUrl, setVideoUrl] = useState<string>(''); // 預設為空值
+  const [videoUrl, setVideoUrl] = useState<string>(""); // 預設為空值
   const [playerId, setPlayerId] = useState<number>(1); // 預設為1
   const [lineIndex, setLineIndex] = useState<number>(0); // 預設為0
   const [urlAvailable, setUrlAvailable] = useState<boolean>(true);
   const [vipOnly, setVipOnly] = useState<boolean>(false);
 
   const [checkIsLoginOpen, setCheckIsLoginOpen] = useState(false);
-  const [checkIsVipOpen, setCheckIsVipOpen] = useState(false);
   const [checkIsRepeatedLoginOpen, setCheckIsRepeatedLoginOpen] = useState(false);
 
   const [checkIsCollectionOpen, setCheckIsCollectionOpen] = useState(false);
 
-  const [windowWidth, setWindowWidth] = useState(
-    document.documentElement.clientWidth,
-  );
+  const [windowWidth, setWindowWidth] = useState(document.documentElement.clientWidth);
 
   const [hasDownloadedFile, setHasDownloadedFile] = useState(false);
-  const [localDiskVideoResponse, setLocalDiskVideoResponse] = useState<ifVideoApiResponse | null | undefined>(undefined);
+  const [localDiskVideoResponse, setLocalDiskVideoResponse] = useState<
+    ifVideoApiResponse | null | undefined
+  >(undefined);
 
   //const [isDownloading, setIsDownloading] = useState(false);
   const [downloadProgress, setDownloadProgress] = useState(0);
   const [downloadedTotalSize, setDownloadedTotalSize] = useState(0);
   const [downloadedLoadedSize, setDownloadedLoadedSize] = useState(0);
   const [downloadedSpeed, setDownloadedSpeed] = useState(0);
-  
+
   const [downloadDialogOpen, setDownloadDialogOpen] = useState(false);
-  const [downloadDialogStatus, setDownloadDialogStatus] = useState<DownloadDialogStatus>('confirm');
+  const [downloadDialogStatus, setDownloadDialogStatus] = useState<DownloadDialogStatus>("confirm");
   const [downloadDialogUsedCouponCount, setDownloadDialogUsedCouponCount] = useState(1);
-  const [downloadDialogExpireDate, setDownloadDialogExpireDate] = useState('');
-  const [downloadDialogErrorMessage, setDownloadDialogErrorMessage] = useState('');
+  const [downloadDialogExpireDate, setDownloadDialogExpireDate] = useState("");
+  const [downloadDialogErrorMessage, setDownloadDialogErrorMessage] = useState("");
 
   /** 本機 MP4 的 blob: URL，建立後重複使用，避免切換線路時再次打 IndexedDB / createObjectURL */
-  const [localVideoUrl, setLocalVideoUrl] = useState('');
+  const [localVideoUrl, setLocalVideoUrl] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
-    window.addEventListener('resize', () => {
+    window.addEventListener("resize", () => {
       setWindowWidth(document.documentElement.clientWidth);
     });
     return () => {
-      window.removeEventListener('resize', () => {
+      window.removeEventListener("resize", () => {
         setWindowWidth(document.documentElement.clientWidth);
       });
     };
@@ -113,7 +103,7 @@ function VideoDetial() {
     let cancelled = false;
     setVipOnly(false);
     (async () => {
-      const { videoFile,hasFile, videoData } = await checkAndGetDownloadedFile(videoId);
+      const { videoFile, hasFile, videoData } = await checkAndGetDownloadedFile(videoId);
       if (cancelled) return;
       setHasDownloadedFile(hasFile);
       if (hasFile && videoData && videoFile) {
@@ -123,7 +113,7 @@ function VideoDetial() {
           setLocalVideoUrl(localUrl);
         }
         setLocalDiskVideoResponse({
-          result: 'success',
+          result: "success",
           message: null,
           data: videoData,
         });
@@ -135,19 +125,19 @@ function VideoDetial() {
   }, [videoId]);
 
   const fetcher = async (): Promise<ifVideoApiResponse | undefined> => {
-    console.log('fetcher', videoId);
+    console.log("fetcher", videoId);
 
     const res = await getVideoInfo(videoId);
 
-    if (res.result === 'fail' || !res.data) {
-      if (res.message!.includes('401')) {
+    if (res.result === "fail" || !res.data) {
+      if (res.message!.includes("401")) {
         setCheckIsRepeatedLoginOpen(true);
       }
       //拿API失敗
       return undefined;
     }
 
-    if (!res.data.can_play && !checkIsVip()) {
+    if (!res.data.can_play) {
       //非VIP無法搶先看
       setVipOnly(true);
     }
@@ -155,10 +145,7 @@ function VideoDetial() {
     return res;
   };
 
-  const swrKey =
-    !hasDownloadedFile
-      ? `GetVideoInfo${videoId}`
-      : null;
+  const swrKey = !hasDownloadedFile ? `GetVideoInfo${videoId}` : null;
 
   const {
     data: swrData,
@@ -171,15 +158,15 @@ function VideoDetial() {
     revalidateIfStale: false,
   });
 
-  const data: ifVideoApiResponse | undefined | null = localDiskVideoResponse ?? swrData ?? undefined;
+  const data: ifVideoApiResponse | undefined | null =
+    localDiskVideoResponse ?? swrData ?? undefined;
   const error = hasDownloadedFile ? undefined : swrError;
   const isLoading = hasDownloadedFile ? false : swrLoading;
 
   // 當數據加載完成後，設定初始的 videoUrl
   useEffect(() => {
     const checkAndSetVideoUrl = async () => {
-
-      if(localVideoUrl){
+      if (localVideoUrl) {
         setVideoUrl(localVideoUrl);
         return;
       }
@@ -190,9 +177,7 @@ function VideoDetial() {
 
       // 獲取遠程 URL
       const remoteUrl =
-        data.data.video_url && data.data.video_url.length > 0
-          ? data.data.video_url[0]
-          : '';
+        data.data.video_url && data.data.video_url.length > 0 ? data.data.video_url[0] : "";
 
       if (remoteUrl) {
         setVideoUrl(remoteUrl);
@@ -206,7 +191,7 @@ function VideoDetial() {
   const handlePlayerChange = async (newPlayerId: number) => {
     setPlayerId(newPlayerId);
 
-    if(localVideoUrl){
+    if (localVideoUrl) {
       setVideoUrl(localVideoUrl);
       return;
     }
@@ -214,17 +199,14 @@ function VideoDetial() {
     // 切換播放器時也要檢查是否有下載檔案
     if (data?.data) {
       // 獲取當前使用的遠程 URL（根據當前線路索引）
-      let remoteUrl = '';
+      let remoteUrl = "";
 
       // 根據當前線路索引獲取對應的遠程 URL
       if (lineIndex < (data.data.video_url?.length || 0)) {
         remoteUrl = data.data.video_url[lineIndex];
       } else {
         const vipIndex = lineIndex - (data.data.video_url?.length || 0);
-        if (
-          data.data.video_url_vip &&
-          vipIndex < data.data.video_url_vip.length
-        ) {
+        if (data.data.video_url_vip && vipIndex < data.data.video_url_vip.length) {
           remoteUrl = data.data.video_url_vip[vipIndex];
         }
       }
@@ -235,7 +217,7 @@ function VideoDetial() {
   // 處理線路切換
   const handleLineChange = async (newLineIndex: number) => {
     if (data?.data) {
-      let targetUrl = '';
+      let targetUrl = "";
       if (newLineIndex < (data.data.video_url?.length || 0)) {
         // 一般線路
         setLineIndex(newLineIndex);
@@ -247,17 +229,9 @@ function VideoDetial() {
           return;
         }
 
-        if (!checkIsVip()) {
-          setCheckIsVipOpen(true);
-          return;
-        }
-
         // VIP線路
         const vipIndex = newLineIndex - (data.data.video_url?.length || 0);
-        if (
-          data.data.video_url_vip &&
-          vipIndex < data.data.video_url_vip.length
-        ) {
+        if (data.data.video_url_vip && vipIndex < data.data.video_url_vip.length) {
           targetUrl = data.data.video_url_vip[vipIndex];
           setLineIndex(newLineIndex);
         }
@@ -280,26 +254,26 @@ function VideoDetial() {
       <BaseMotionDiv>
         <Box
           style={{
-            backgroundColor: 'black',
+            backgroundColor: "black",
             width: windowWidth,
-            minHeight: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
+            minHeight: "100%",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
           }}
         >
-          <TopTitleBar title={'视频详情'} defaultBackPath="/home" />
+          <TopTitleBar title={"视频详情"} defaultBackPath="/home" />
           <Box
             sx={{
               flex: 1,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
               width: windowWidth,
-              paddingTop: '10px',
+              paddingTop: "10px",
             }}
           >
-            <CircularProgress size={60} thickness={4} sx={{ color: 'white' }} />
+            <CircularProgress size={60} thickness={4} sx={{ color: "white" }} />
           </Box>
         </Box>
       </BaseMotionDiv>
@@ -312,17 +286,17 @@ function VideoDetial() {
       <BaseMotionDiv>
         <Box
           style={{
-            backgroundColor: 'black',
+            backgroundColor: "black",
             width: windowWidth,
-            minHeight: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
+            minHeight: "100%",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
-          <TopTitleBar title={'视频详情'} defaultBackPath="/home" />
-          <Typography variant="h6" sx={{ color: 'white' }}>
+          <TopTitleBar title={"视频详情"} defaultBackPath="/home" />
+          <Typography variant="h6" sx={{ color: "white" }}>
             載入失敗: {error}
           </Typography>
         </Box>
@@ -338,28 +312,26 @@ function VideoDetial() {
   }
 
   const apiData = data.data;
-  const p1_player_before_adv_sec = checkIsVip()
-    ? 0
-    : getSiteSetting().p1_player_before_adv_sec ?? 15;
+  const p1_player_before_adv_sec = 0;
 
   // 按鈕通用樣式
   const buttonStyle = {
     backgroundColor: cBasePanel,
-    color: 'rgba(255, 255, 255, 0.6)', // white60
-    border: 'none',
+    color: "rgba(255, 255, 255, 0.6)", // white60
+    border: "none",
     borderRadius: 1,
-    textTransform: 'none',
-    minWidth: '30px',
-    width: '300px',
+    textTransform: "none",
+    minWidth: "30px",
+    width: "300px",
     py: 0.5,
     px: 1,
-    '&:hover': {
-      backgroundColor: 'rgba(51, 51, 51, 0.7)',
+    "&:hover": {
+      backgroundColor: "rgba(51, 51, 51, 0.7)",
     },
-    '& .MuiSvgIcon-root': {
+    "& .MuiSvgIcon-root": {
       fontSize: 12,
     },
-    '& .MuiButton-startIcon': {
+    "& .MuiButton-startIcon": {
       marginRight: 0.5, // 縮小圖標和文字之間的間距
     },
   };
@@ -369,18 +341,15 @@ function VideoDetial() {
     //navigate(`/videoDetial/${apiData.group_id}`);
   };
 
-  const getDownloadUrl =  (): string => {
-    let downloadUrl = '';
+  const getDownloadUrl = (): string => {
+    let downloadUrl = "";
     if (lineIndex < (apiData.video_url_mp4?.length || 0)) {
       // 一般線路：使用 video_url_mp4
       downloadUrl = apiData.video_url_mp4[lineIndex];
     } else {
       // VIP線路：使用 video_url_mp4_vip
       const vipIndex = lineIndex - (apiData.video_url_mp4?.length || 0);
-      if (
-        apiData.video_url_mp4_vip &&
-        vipIndex < apiData.video_url_mp4_vip.length
-      ) {
+      if (apiData.video_url_mp4_vip && vipIndex < apiData.video_url_mp4_vip.length) {
         downloadUrl = apiData.video_url_mp4_vip[vipIndex];
       }
     }
@@ -389,18 +358,17 @@ function VideoDetial() {
 
   // 處理下載影片（背景下載到應用目錄）
   const handleDownload = async () => {
-
     if (downloadDialogUsedCouponCount > 0) {
       //使用下載券
       const buyResult = await authUseExchangeTicket(videoId!);
-      if (buyResult.result === 'fail' || !buyResult.data) {
-        alert('使用下載券失敗，請稍後再試');
-        setDownloadDialogStatus('fail');
+      if (buyResult.result === "fail" || !buyResult.data) {
+        alert("使用下載券失敗，請稍後再試");
+        setDownloadDialogStatus("fail");
         return;
       }
     }
 
-    setDownloadDialogStatus('downloading');
+    setDownloadDialogStatus("downloading");
     setDownloadProgress(0);
 
     // MP4 文件直接保存為 .mp4 格式（在 try 外定義以便 catch 區塊也能使用）
@@ -412,7 +380,7 @@ function VideoDetial() {
 
       // 如果沒有找到 MP4 URL，提示錯誤
       if (!downloadUrl) {
-        alert('找不到可下載的 MP4 視頻地址');
+        alert("找不到可下載的 MP4 視頻地址");
         return;
       }
 
@@ -421,7 +389,6 @@ function VideoDetial() {
         setDownloadedTotalSize(detail.totalBytes ?? 0);
         setDownloadedLoadedSize(detail.loadedBytes);
         setDownloadedSpeed(detail.bytesPerSecond);
-
       });
 
       // 下載成功後才另外儲存影片資訊到 VideoDownloadDatas
@@ -438,35 +405,34 @@ function VideoDetial() {
         try {
           // 下載完成後，更新是否有已下載文件的狀態
           const downloadedFile = await getDownloadedFile(fileName);
-          console.log('檢查下載文件結果:', downloadedFile);
+          console.log("檢查下載文件結果:", downloadedFile);
           setHasDownloadedFile(!!downloadedFile);
 
           if (downloadedFile) {
-            console.log('下載成功，文件已確認存在');
-            setDownloadDialogStatus('success');
+            console.log("下載成功，文件已確認存在");
+            setDownloadDialogStatus("success");
           } else {
-            console.warn('下載完成但文件未找到');
-            setDownloadDialogStatus('fail');
+            console.warn("下載完成但文件未找到");
+            setDownloadDialogStatus("fail");
           }
         } catch (checkError) {
-          console.warn('檢查下載文件時發生錯誤（可能不影響下載）:', checkError);
+          console.warn("檢查下載文件時發生錯誤（可能不影響下載）:", checkError);
           // 即使檢查失敗，也嘗試設置狀態
           setHasDownloadedFile(true);
-          setDownloadDialogStatus('fail');
+          setDownloadDialogStatus("fail");
         }
       })();
     } catch (error: any) {
-      alert('下載失敗，請稍後再試');
+      alert("下載失敗，請稍後再試");
       setDownloadProgress(0);
-      setDownloadDialogStatus('fail');
+      setDownloadDialogStatus("fail");
     }
   };
 
- 
   const handleClickDownload = async () => {
     //刪除IndexedDB
     //indexedDB.deleteDatabase('VideoDownloads')
-    
+
     //  登入檢查
     if (!checkIsLogin()) {
       setCheckIsLoginOpen(true);
@@ -474,27 +440,35 @@ function VideoDetial() {
     }
 
     const checkResult = await checkExchangeTicket(videoId!);
-    console.log('checkResult', checkResult);
-    if(checkResult.result === 'fail' || !checkResult.data){
-      setDownloadDialogStatus('fail');
-      setDownloadDialogErrorMessage(checkResult.data?.msg ?? '');
+    console.log("checkResult", checkResult);
+    if (checkResult.result === "fail" || !checkResult.data) {
+      setDownloadDialogStatus("fail");
+      setDownloadDialogErrorMessage(checkResult.data?.msg ?? "");
       setDownloadDialogOpen(true);
       return;
     }
-    if (checkResult.data && (checkResult.data.expire_date && checkResult.data.expire_date > new Date().toISOString())){
+    if (
+      checkResult.data &&
+      checkResult.data.expire_date &&
+      checkResult.data.expire_date > new Date().toISOString()
+    ) {
       //還在下載有效期內
       setDownloadDialogExpireDate(checkResult.data.expire_date);
-      setDownloadDialogStatus('confirm');
+      setDownloadDialogStatus("confirm");
       setDownloadDialogUsedCouponCount(0);
       setDownloadDialogOpen(true);
       return;
     }
 
-    console.log('checkResult.data', checkResult.data);
+    console.log("checkResult.data", checkResult.data);
 
-    if (!checkResult.data || !checkResult.data.video_download || checkResult.data.video_download! <= 0){
+    if (
+      !checkResult.data ||
+      !checkResult.data.video_download ||
+      checkResult.data.video_download! <= 0
+    ) {
       //下載券已用完
-      setDownloadDialogStatus('noCoupon');
+      setDownloadDialogStatus("noCoupon");
       setDownloadDialogOpen(true);
       return;
     }
@@ -517,7 +491,7 @@ function VideoDetial() {
     }*/
 
     //顯示下載券使用彈窗
-    setDownloadDialogStatus('confirm');
+    setDownloadDialogStatus("confirm");
     setDownloadDialogUsedCouponCount(1);
     setDownloadDialogOpen(true);
   };
@@ -526,17 +500,15 @@ function VideoDetial() {
     <BaseMotionDiv>
       <Box
         style={{
-          backgroundColor: 'black',
-          width: '100%',
-          minHeight: '100%',
-          display: 'grid',
+          backgroundColor: "black",
+          width: "100%",
+          minHeight: "100%",
+          display: "grid",
           gap: 12, //設定子元件間距
         }}
       >
-        <TopTitleBar title={'视频详情'} defaultBackPath="/home" />
-        <Typography
-          sx={{ color: 'white', ml: 2, fontSize: '12px', textAlign: 'center' }}
-        >
+        <TopTitleBar title={"视频详情"} defaultBackPath="/home" />
+        <Typography sx={{ color: "white", ml: 2, fontSize: "12px", textAlign: "center" }}>
           请勿使用 行政.学校单位网路观看会导致无法播放
         </Typography>
         {vipOnly && (
@@ -569,8 +541,7 @@ function VideoDetial() {
         />
 
         {/* 影片標題 */}
-        <VideoTitle title={apiData.title} backgroundColor={'black'} />
-
+        <VideoTitle title={apiData.title} backgroundColor={"black"} />
 
         {/* 播放器與線路選擇器 */}
         <PlayerAndLineSelectBar
@@ -589,13 +560,8 @@ function VideoDetial() {
           thank_vendor_url={apiData.thank_vendor_url}
         />
 
-        {/* VIDEO_COVER廣告 */}
-        <CosAdIFrame adType="VIDEO_COVER" pageName={'videoDetial'} />
-
-        {apiData.group_id !== '0' && (
-          <Box
-            sx={{ display: 'flex', justifyContent: 'center', mt: 1, mb: -1 }}
-          >
+        {apiData.group_id !== "0" && (
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 1, mb: -1 }}>
             <Button
               variant="contained"
               startIcon={<ArticleOutlinedIcon sx={{ color: cMainColor }} />}
@@ -625,35 +591,23 @@ function VideoDetial() {
 
         {/* 影片按鈕條 */}
         <VideoButtonBar
-          videoId={videoId || ''}
+          videoId={videoId || ""}
           videoUrl={videoUrl}
           player={playerId}
           line={lineIndex + 1}
-          reason={urlAvailable ? '0' : '2'}
+          reason={urlAvailable ? "0" : "2"}
           videoData={apiData}
         />
 
         {/* 影片資訊 */}
         <VideoInfo video={apiData} />
 
-        <Typography sx={{ color: 'white', ml: 2, fontSize: '22px' }}>
-          相关视频
-        </Typography>
+        <Typography sx={{ color: "white", ml: 2, fontSize: "22px" }}>相关视频</Typography>
         {apiData && apiData.cnxh && apiData.cnxh.length > 0 && (
-          <CosGridFrame
-            items={apiData.cnxh.slice(0, 4)}
-            column={2}
-            isReplace={true}
-          />
+          <CosGridFrame items={apiData.cnxh.slice(0, 4)} column={2} isReplace={true} />
         )}
-
-        <CosAdIFrame adType="VIDEO_INFO" pageName={'videoDetial'} />
         {apiData && apiData.cnxh && apiData.cnxh.length > 4 && (
-          <CosGridFrame
-            items={apiData.cnxh.slice(4)}
-            column={2}
-            isReplace={true}
-          />
+          <CosGridFrame items={apiData.cnxh.slice(4)} column={2} isReplace={true} />
         )}
         <Box sx={{ height: 20 }}></Box>
 
@@ -662,14 +616,6 @@ function VideoDetial() {
           open={checkIsLoginOpen}
           onCancel={() => {
             setCheckIsLoginOpen(false);
-          }}
-        />
-
-        {/* 檢查是否已VIP */}
-        <CosCheckIsVip
-          open={checkIsVipOpen}
-          onCancel={() => {
-            setCheckIsVipOpen(false);
           }}
         />
 
@@ -686,9 +632,21 @@ function VideoDetial() {
           status={downloadDialogStatus}
           progress={downloadProgress}
           usedCouponCount={downloadDialogUsedCouponCount}
-          downloadedSizeText={downloadedLoadedSize > 0 ? `${(downloadedLoadedSize / 1024 / 1024).toFixed(2)}MB` : '0MB'}
-          totalSizeText={downloadedTotalSize > 0 ? `${(downloadedTotalSize / 1024 / 1024).toFixed(2)}MB` : '0MB'}
-          downloadedSpeedText={downloadedSpeed > 0 ? ((downloadedSpeed / 1024) >= 1024 ? `${(downloadedSpeed / 1024 / 1024).toFixed(2)}MB/s` : `${(downloadedSpeed / 1024).toFixed(2)}KB/s`) : '0KB/s'}
+          downloadedSizeText={
+            downloadedLoadedSize > 0
+              ? `${(downloadedLoadedSize / 1024 / 1024).toFixed(2)}MB`
+              : "0MB"
+          }
+          totalSizeText={
+            downloadedTotalSize > 0 ? `${(downloadedTotalSize / 1024 / 1024).toFixed(2)}MB` : "0MB"
+          }
+          downloadedSpeedText={
+            downloadedSpeed > 0
+              ? downloadedSpeed / 1024 >= 1024
+                ? `${(downloadedSpeed / 1024 / 1024).toFixed(2)}MB/s`
+                : `${(downloadedSpeed / 1024).toFixed(2)}KB/s`
+              : "0KB/s"
+          }
           expireDate={downloadDialogExpireDate}
           onClose={() => {
             setDownloadDialogOpen(false);

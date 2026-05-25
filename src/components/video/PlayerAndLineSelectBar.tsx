@@ -148,82 +148,76 @@ const PlayerAndLineSelectBar: React.FC<PlayerAndLineSelectBarProps> = ({
 
       {/* 線路 Box - 靠右 */}
       {!hasDownloadedFile && (
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "flex-end",
-        }}
-      >
-        <Typography
+        <Box
           sx={{
-            color: textColor,
-            fontSize: "1rem",
-            fontWeight: "bold",
-            whiteSpace: "nowrap",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "flex-end",
           }}
         >
-          线路:
-        </Typography>
+          <Typography
+            sx={{
+              color: textColor,
+              fontSize: "1rem",
+              fontWeight: "bold",
+              whiteSpace: "nowrap",
+            }}
+          >
+            线路:
+          </Typography>
 
-        {data?.video_url &&
-          data.video_url.map((_: string, index: number) => (
-            <Button
-              key={`line-${index}`}
-              variant="contained"
-              sx={{
-                minWidth: "20px",
-                width: "25px",
-                height: "25px",
-                mx: 0.5,
-                backgroundColor: lineIndex === index ? cMainColor2 : cBasePanel,
-                color: "white",
-                border: "2px solid #666",
-                "&:hover": {
-                  backgroundColor:
-                    lineIndex === index ? cMainColor2 : cBasePanel,
-                  opacity: 0.9,
-                },
-              }}
-              onClick={() => handleLineChange(index)}
-            >
-              {index + 1}
-            </Button>
-          ))}
+          {data?.video_url &&
+            data.video_url.map((_: string, index: number) => (
+              <Button
+                key={`line-${index}`}
+                variant="contained"
+                sx={{
+                  minWidth: "20px",
+                  width: "25px",
+                  height: "25px",
+                  mx: 0.5,
+                  backgroundColor: lineIndex === index ? cMainColor2 : cBasePanel,
+                  color: "white",
+                  border: "2px solid #666",
+                  "&:hover": {
+                    backgroundColor: lineIndex === index ? cMainColor2 : cBasePanel,
+                    opacity: 0.9,
+                  },
+                }}
+                onClick={() => handleLineChange(index)}
+              >
+                {index + 1}
+              </Button>
+            ))}
 
-        
-        {data?.video_url_vip &&
-          data.video_url_vip.map((_: string, index: number) => (
-            <Button
-              key={`vip-line-${index}`}
-              variant="contained"
-              sx={{
-                minWidth: "40px",
-                width: "30px",
-                height: "25px",
-                mx: 0.5,
-                backgroundColor:
-                  lineIndex === (data?.video_url?.length || 0) + index
-                    ? cMainColor2
-                    : cBasePanel,
-                color: "yellow",
-                border: "2px solid #666",
-                "&:hover": {
+          {data?.video_url_vip &&
+            data.video_url_vip.map((_: string, index: number) => (
+              <Button
+                key={`vip-line-${index}`}
+                variant="contained"
+                sx={{
+                  minWidth: "40px",
+                  width: "30px",
+                  height: "25px",
+                  mx: 0.5,
                   backgroundColor:
-                    lineIndex === (data?.video_url?.length || 0) + index
-                      ? cMainColor2
-                      : cBasePanel,
-                  opacity: 0.9,
-                },
-              }}
-              onClick={() =>
-                handleVipLineChange((data?.video_url?.length || 0) + index)
-              }
-            >
-              VIP{index + 1}
-            </Button>
-          ))}
-      </Box>
+                    lineIndex === (data?.video_url?.length || 0) + index ? cMainColor2 : cBasePanel,
+                  color: "yellow",
+                  border: "2px solid #666",
+                  "&:hover": {
+                    backgroundColor:
+                      lineIndex === (data?.video_url?.length || 0) + index
+                        ? cMainColor2
+                        : cBasePanel,
+                    opacity: 0.9,
+                  },
+                }}
+                onClick={() => handleVipLineChange((data?.video_url?.length || 0) + index)}
+              >
+                VIP{index + 1}
+              </Button>
+            ))}
+        </Box>
       )}
     </Box>
   );

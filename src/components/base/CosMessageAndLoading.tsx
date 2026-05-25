@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
-import { Snackbar, Alert, Backdrop, CircularProgress } from '@mui/material';
+import React, { useEffect } from "react";
+import { Snackbar, Alert, Backdrop, CircularProgress } from "@mui/material";
 
-export type CosMsgType = 'error' | 'success' | 'info' | 'warning';
+export type CosMsgType = "error" | "success" | "info" | "warning";
 
 interface CosMessageAndLoadingProps {
   isloading: boolean;
@@ -13,12 +13,11 @@ interface CosMessageAndLoadingProps {
 
 const CosMessageAndLoading: React.FC<CosMessageAndLoadingProps> = ({
   isloading = false,
-  msgType = 'info',
+  msgType = "info",
   msg,
   useSnackbar = true,
-  onClose
+  onClose,
 }) => {
-
   // 當有錯誤訊息或成功訊息時，3秒後自動關閉
   useEffect(() => {
     if (msg && !useSnackbar) {
@@ -38,24 +37,20 @@ const CosMessageAndLoading: React.FC<CosMessageAndLoadingProps> = ({
     return (
       <>
         <Snackbar
-          open={msg !== ''}
+          open={msg !== ""}
           autoHideDuration={3000}
           onClose={onClose}
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
         >
-          <Alert 
-            onClose={onClose} 
-            severity={msgType} 
-            sx={{ width: '100%' ,fontSize:18}}
-          >
+          <Alert onClose={onClose} severity={msgType} sx={{ width: "100%", fontSize: 18 }}>
             {msg}
           </Alert>
         </Snackbar>
         <Backdrop
-          sx={{ 
-            color: '#fff',
+          sx={{
+            color: "#fff",
             zIndex: (theme) => theme.zIndex.drawer + 1,
-            backgroundColor: 'rgba(0, 0, 0, 0.5)'
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
           }}
           open={isloading}
         >
@@ -67,25 +62,21 @@ const CosMessageAndLoading: React.FC<CosMessageAndLoadingProps> = ({
 
   return (
     <>
-      <Alert 
-        onClose={onClose} 
-        severity={msgType} 
-        sx={{ width: 'auto' }}
-      >
+      <Alert onClose={onClose} severity={msgType} sx={{ width: "auto" }}>
         {msg}
       </Alert>
       <Backdrop
-          sx={{ 
-            color: '#fff',
-            zIndex: (theme) => theme.zIndex.drawer + 1,
-            backgroundColor: 'rgba(0, 0, 0, 0.5)'
-          }}
-          open={isloading}
-        >
-          <CircularProgress color="inherit" />
-        </Backdrop>
+        sx={{
+          color: "#fff",
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
+        }}
+        open={isloading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </>
   );
 };
 
-export default CosMessageAndLoading; 
+export default CosMessageAndLoading;

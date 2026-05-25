@@ -7,11 +7,7 @@ import CosButton from "../../components/login/CosButton";
 import { useNavigate } from "react-router-dom";
 import { cMainColor } from "../../data/ColorDef";
 import CosWhiteCardBox from "../../components/login/CosWhiteCardBox";
-import {
-  checkAccount,
-  checkPassword,
-  storeLoginInfo,
-} from "../../Shared/function/AccountFunction";
+import { checkAccount, checkPassword, storeLoginInfo } from "../../Shared/function/AccountFunction";
 import { sendAuthLogin } from "../../Shared/Api/CosApi";
 import { setUserInfo } from "../../data/DataCenter";
 import { trackerUtil } from "../../Shared/Utils/TrackerUtil";
@@ -25,13 +21,8 @@ function CosLoginPage() {
   const [password, setPassword] = useState("");
 
   const [msg, setMsg] = useState("");
-  const [msgType, setMsgType] = useState<
-    "error" | "success" | "info" | "warning"
-  >("info");
-  const setShowMsg = (
-    msg: string,
-    msgType: "error" | "success" | "info" | "warning"
-  ) => {
+  const [msgType, setMsgType] = useState<"error" | "success" | "info" | "warning">("info");
+  const setShowMsg = (msg: string, msgType: "error" | "success" | "info" | "warning") => {
     setMsg(msg);
     setMsgType(msgType);
   };
@@ -101,11 +92,7 @@ function CosLoginPage() {
           <CosBackButton />
 
           {/* 帳號輸入框 */}
-          <CosInputField
-            value={account}
-            title="帐号(请勿使用mail)"
-            setValue={setAccount}
-          />
+          <CosInputField value={account} title="帐号(请勿使用mail)" setValue={setAccount} />
 
           {/* 密碼輸入框 */}
           <CosInputField
@@ -119,11 +106,7 @@ function CosLoginPage() {
           <CosForgetPasswordButton />
 
           {/* 登入按鈕 */}
-          <CosButton
-            text="登入帐号"
-            onClick={handleLogin}
-            background={cMainColor}
-          />
+          <CosButton text="登入帐号" onClick={handleLogin} background={cMainColor} />
 
           {/* 註冊按鈕 */}
           <CosButton text="注册帐号" onClick={handleRegister} />

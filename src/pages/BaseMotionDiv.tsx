@@ -2,11 +2,10 @@
 import { ReactNode } from "react";
 
 interface Props {
-  children?: ReactNode
+  children?: ReactNode;
   // any props that come into the component
 }
-const BaseMotionDiv = ({children,...props} :Props) => {
-
+const BaseMotionDiv = ({ children, ...props }: Props) => {
   return (
     /*
     <motion.div
@@ -21,11 +20,9 @@ const BaseMotionDiv = ({children,...props} :Props) => {
       animate={{opacity: 1}}
       exit={{opacity: 0}}
     >*/
-    <>
-      {children}
-    </>
+    <>{children}</>
     /*</motion.div>*/
   );
-}
+};
 
 export default BaseMotionDiv;

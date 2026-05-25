@@ -1,26 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import { Box, CircularProgress } from '@mui/material';
-import TopTitleBar from '../../components/TopTitleBar';
-import BaseMotionDiv from '../BaseMotionDiv';
-import useSWR from 'swr';
-import { getOrderPlan } from '../../Shared/Api/CosApi';
-import { ifOrderPlan } from '../../Shared/Api/interface/OrderInterface';
-import SponsorCaseDialog from '../../components/sponsor/SponsorCaseDialog';
-import { checkIsPay } from '../../Shared/function/AccountFunction';
-import SponsorTabs from '../../components/sponsor/SponsorTabs';
-import MonthlyPlans from '../../components/sponsor/MonthlyPlans';
-import DownloadTicketPlans from '../../components/sponsor/DownloadTicketPlans';
-import { useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { Box, CircularProgress } from "@mui/material";
+import TopTitleBar from "../../components/TopTitleBar";
+import BaseMotionDiv from "../BaseMotionDiv";
+import useSWR from "swr";
+import { getOrderPlan } from "../../Shared/Api/CosApi";
+import { ifOrderPlan } from "../../Shared/Api/interface/OrderInterface";
+import SponsorCaseDialog from "../../components/sponsor/SponsorCaseDialog";
+import { checkIsPay } from "../../Shared/function/AccountFunction";
+import SponsorTabs from "../../components/sponsor/SponsorTabs";
+import MonthlyPlans from "../../components/sponsor/MonthlyPlans";
+import DownloadTicketPlans from "../../components/sponsor/DownloadTicketPlans";
+import { useLocation } from "react-router-dom";
 
-type SponsorTabType = 'monthly' | 'download';
+type SponsorTabType = "monthly" | "download";
 
 function CosSponsorMainPage() {
   const [open, setOpen] = useState(false);
-  const [selectedPKey, setSelectedPKey] = useState<string>('');
-  const [activeTab, setActiveTab] = useState<SponsorTabType>('monthly');
-  const [windowWidth, setWindowWidth] = useState(
-    document.documentElement.clientWidth,
-  );
+  const [selectedPKey, setSelectedPKey] = useState<string>("");
+  const [activeTab, setActiveTab] = useState<SponsorTabType>("monthly");
+  const [windowWidth, setWindowWidth] = useState(document.documentElement.clientWidth);
   const location = useLocation();
 
   useEffect(() => {
@@ -28,22 +26,22 @@ function CosSponsorMainPage() {
       setWindowWidth(document.documentElement.clientWidth);
     };
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
   const fetcher = async (): Promise<ifOrderPlan | undefined> => {
     const res = await getOrderPlan();
-    if (res.result === 'success') {
+    if (res.result === "success") {
       return res.data;
     }
     return undefined;
   };
 
-  const { data, error, isLoading } = useSWR('sponsorMain', fetcher, {
+  const { data, error, isLoading } = useSWR("sponsorMain", fetcher, {
     revalidateOnFocus: true,
     revalidateOnReconnect: true,
     dedupingInterval: 0,
@@ -60,8 +58,8 @@ function CosSponsorMainPage() {
   };
 
   useEffect(() => {
-    if (location.state?.tab === 'download') {
-      setActiveTab('download');
+    if (location.state?.tab === "download") {
+      setActiveTab("download");
     }
   }, [location.state]);
 
@@ -69,10 +67,10 @@ function CosSponsorMainPage() {
     <BaseMotionDiv>
       <Box
         sx={{
-          backgroundColor: 'black',
+          backgroundColor: "black",
           width: windowWidth,
-          minHeight: '200%',
-          display: 'grid',
+          minHeight: "200%",
+          display: "grid",
           gap: 1.5,
         }}
       >
@@ -80,22 +78,18 @@ function CosSponsorMainPage() {
 
         <SponsorTabs activeTab={activeTab} onChange={setActiveTab} />
         {isLoading && (
-          <Box sx={{ width: windowWidth * 0.8, margin: '0 auto' }}>
+          <Box sx={{ width: windowWidth * 0.8, margin: "0 auto" }}>
             <CircularProgress />
           </Box>
         )}
 
         {/** 月费方案 */}
-        {!isLoading && !error && activeTab === 'monthly' && (
-          <MonthlyPlans
-            data={data}
-            windowWidth={windowWidth}
-            onPlanClick={handlePlanClick}
-          />
+        {!isLoading && !error && activeTab === "monthly" && (
+          <MonthlyPlans data={data} windowWidth={windowWidth} onPlanClick={handlePlanClick} />
         )}
 
         {/** 下载券 */}
-        {/*!isLoading && activeTab === 'download' && 
+        {/*!isLoading && activeTab === 'download' &&
           <DownloadTicketPlans 
             data={data!}
             windowWidth={windowWidth}

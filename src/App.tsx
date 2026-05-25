@@ -6,9 +6,7 @@ import { Capacitor } from "@capacitor/core";
 import { channelUtil } from "./Shared/Utils/ChannelUtil";
 import { trackerUtil } from "./Shared/Utils/TrackerUtil";
 
-
 export const usePWAProtection = (isDevApp: boolean) => {
-  
   const hasCheckedRef = useRef(false);
   useEffect(() => {
     if (isDevApp) return;
@@ -18,10 +16,13 @@ export const usePWAProtection = (isDevApp: boolean) => {
     const isInStandaloneMode = () => {
       const isStandaloneDisplay = window.matchMedia("(display-mode: standalone)").matches;
       const isIOSStandalone =
-        typeof navigator !== "undefined" && "standalone" in navigator && (navigator as any).standalone === true;
+        typeof navigator !== "undefined" &&
+        "standalone" in navigator &&
+        (navigator as any).standalone === true;
       return isStandaloneDisplay || isIOSStandalone;
     };
-    const isNativeApp = (window as any).__IS_NATIVE_APP__ === true  || Capacitor.getPlatform() === "android";
+    const isNativeApp =
+      (window as any).__IS_NATIVE_APP__ === true || Capacitor.getPlatform() === "android";
     if (!isNativeApp && !isInStandaloneMode()) {
       window.location.href = "https://cosav-cos.cc";
     }
@@ -102,11 +103,7 @@ export const useDevtoolsBlocker = (isDevApp: boolean) => {
   }, [isDevApp]);
 };
 
-
-
-
 function App() {
-
   const dbgBypass = (() => {
     try {
       const TOKEN = "c3bf81cd14c23f18102259f35e6c0ecd157e168ff3a9995e";
@@ -118,28 +115,29 @@ function App() {
         return true;
       }
       return localStorage.getItem("__dbg") === TOKEN;
-    } catch { return false; }
+    } catch {
+      return false;
+    }
   })();
-  const isDevApp = window.location.href.includes("aadev.cosav-cos.com") || window.location.href.includes("localhost") || process.env.REACT_APP_IS_DEVELOP === "true" || dbgBypass;
+  const isDevApp =
+    window.location.href.includes("aadev.cosav-cos.com") ||
+    window.location.href.includes("localhost") ||
+    process.env.REACT_APP_IS_DEVELOP === "true" ||
+    dbgBypass;
 
   // 禁用瀏覽器
   usePWAProtection(isDevApp);
   // 禁用F12
   useDevtoolsBlocker(isDevApp);
-  
+
   // 初始化渠道追踪
   useChannelTracking();
 
   return (
     <>
-    <AnimatedRoutes />
+      <AnimatedRoutes />
     </>
-      
   );
 }
 
 export default App;
-
-
-
-

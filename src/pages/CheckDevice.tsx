@@ -19,7 +19,6 @@ interface DeviceInfo {
 }
 
 const fetcher = async (): Promise<DeviceInfo> => {
-
   await CosApiUtil.getInstance().getApiUrl();
 
   // 模擬 API 延遲
@@ -30,35 +29,36 @@ const fetcher = async (): Promise<DeviceInfo> => {
   try {
     userAgentData = (navigator as any).userAgentData;
   } catch (error) {
-    console.warn('無法取得 User-Agent Client Hints API 資訊:', error);
+    console.warn("無法取得 User-Agent Client Hints API 資訊:", error);
     userAgentData = null;
   }
-  
+
   return {
     userAgent: navigator.userAgent,
-    userAgentData: userAgentData ? {
-      platform: userAgentData.platform,
-      mobile: userAgentData.mobile,
-      brands: userAgentData.brands
-    } : undefined
+    userAgentData: userAgentData
+      ? {
+          platform: userAgentData.platform,
+          mobile: userAgentData.mobile,
+          brands: userAgentData.brands,
+        }
+      : undefined,
   };
 };
 
 const CheckDevice: React.FC = () => {
   const navigate = useNavigate();
   const { data: deviceInfo, error, isLoading } = useSWR("deviceInfo", fetcher);
-  const [deviceType, setDeviceType] = useState<
-    "APPLE" | "ANDROID" | "OTHER" | null
-  >(null);
+  const [deviceType, setDeviceType] = useState<"APPLE" | "ANDROID" | "OTHER" | null>(null);
 
   useEffect(() => {
     if (deviceInfo) {
       const userAgent = deviceInfo.userAgent.toLowerCase();
       // 使用更精確的判斷方式
-      const isIOS = /iphone|ipad|ipod|macintosh/.test(userAgent) || 
-                   deviceInfo.userAgentData?.platform === 'iOS';
-      const isAndroid = /android/.test(userAgent) || 
-                       deviceInfo.userAgentData?.platform === 'Android';
+      const isIOS =
+        /iphone|ipad|ipod|macintosh/.test(userAgent) ||
+        deviceInfo.userAgentData?.platform === "iOS";
+      const isAndroid =
+        /android/.test(userAgent) || deviceInfo.userAgentData?.platform === "Android";
 
       if (isIOS) {
         setDeviceType("APPLE");
@@ -156,30 +156,27 @@ const CheckDevice: React.FC = () => {
           {deviceType === "APPLE"
             ? "APPLE 裝置"
             : deviceType === "ANDROID"
-            ? "ANDROID 裝置"
-            : "亲！目前暂时不支援该平台!!\n请直接与客服联络"}
+              ? "ANDROID 裝置"
+              : "亲！目前暂时不支援该平台!!\n请直接与客服联络"}
         </Typography>
         <br />
-        {CosApiUtil.getInstance().isInitApiUrl &&(
+        {CosApiUtil.getInstance().isInitApiUrl && (
           <Typography
             variant="h6"
             sx={{
-              color: 'white',
+              color: "white",
               fontWeight: "bold",
               whiteSpace: "pre-line",
             }}
           >
-            {CosApiUtil.getInstance().getApiUrlFailReason==='success'
+            {CosApiUtil.getInstance().getApiUrlFailReason === "success"
               ? "使用线路:线路1"
               : "使用线路:备用线路"}
           </Typography>
         )}
-
-        
       </Paper>
     </Box>
   );
 };
 
 export default CheckDevice;
-

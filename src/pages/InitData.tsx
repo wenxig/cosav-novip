@@ -1,24 +1,12 @@
 import React, { useState, useEffect, useMemo } from "react";
-import {
-  Box,
-  CircularProgress,
-  Typography,
-  Paper,
-  IconButton,
-} from "@mui/material";
-import useSWR from "swr";
-import { useNavigate } from "react-router-dom";
-import BaseMotionDiv from "./BaseMotionDiv";
-import { setCategories, setGameCategories, setSiteSetting, setUserInfo } from "../data/DataCenter";
-import { getGameCategories, getSiteSetting ,getVideoCategories, getVideoCategoriesSub, sendAuthLogin} from "../Shared/Api/CosApi";
-import CosAdIFrame from "../components/CosAdIFrame";
+import { Box, CircularProgress, Typography, Paper, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { cMainColor } from "../data/ColorDef";
 import { ifCategoryItem } from "../Shared/Api/interface/CategoriesInterface";
 import { API_DEDUPING_INTERVAL, pInitCountDownSec } from "../data/ParameterDef";
 import { clearLoginInfo, getLoginInfo, storeLoginInfo } from "../Shared/function/AccountFunction";
 import { ifSiteSetting } from "../Shared/Api/interface/SiteInterface";
-import packageJson from '../../package.json';
+import packageJson from "../../package.json";
 import CosNewVersion from "../components/base/check/CosNewVersion";
 
 interface InitDataResponse {
@@ -32,12 +20,12 @@ interface InitDataResponse {
 const InitData: React.FC = () => {
   const navigate = useNavigate();
 
-  const checkLogin = async ()=>{
+  const checkLogin = async () => {
     const loginInfo = getLoginInfo();
-    if(loginInfo){
-      const res = await sendAuthLogin(loginInfo.account,loginInfo.password);
+    if (loginInfo) {
+      const res = await sendAuthLogin(loginInfo.account, loginInfo.password);
       //呼叫API失敗
-      if (res.result === 'fail' || !res.data) {
+      if (res.result === "fail" || !res.data) {
         return;
       }
 
@@ -53,80 +41,78 @@ const InitData: React.FC = () => {
       // 更新登入資訊
       storeLoginInfo(loginInfo.account, loginInfo.password);
     }
-  }
+  };
 
-
-  const checkIsHaveNewVersion = async (siteData:ifSiteSetting)=>{
+  const checkIsHaveNewVersion = async (siteData: ifSiteSetting) => {
     const currentVersion = siteData.react_version ?? siteData.version;
     const packageVersion = packageJson.version;
 
-    if(packageVersion === currentVersion){
+    if (packageVersion === currentVersion) {
       return false;
     }
 
-    const nowVersionParts = packageVersion.split('.');
-    const currentVersionParts = currentVersion.split('.');
+    const nowVersionParts = packageVersion.split(".");
+    const currentVersionParts = currentVersion.split(".");
 
     for (let i = 0; i < nowVersionParts.length; i++) {
-        const nowPart = parseInt(nowVersionParts[i]);
-        const currentPart = parseInt(currentVersionParts[i]);
+      const nowPart = parseInt(nowVersionParts[i]);
+      const currentPart = parseInt(currentVersionParts[i]);
 
-        if (nowPart > currentPart) {
-            return false;
-        }
-        if(nowPart < currentPart){
-          return true;
-        }
+      if (nowPart > currentPart) {
+        return false;
+      }
+      if (nowPart < currentPart) {
+        return true;
+      }
     }
 
     return true;
-
-  }
+  };
 
   //初始化資料
   const fetcher = async (): Promise<InitDataResponse> => {
     //初始setting資料
     const siteData = await getSiteSetting();
-    if(siteData.result === 'fail' || !siteData.data){
+    if (siteData.result === "fail" || !siteData.data) {
       return { success: false, message: siteData.message! };
     }
     setSiteSetting(siteData.data);
 
-    console.log('process.env.REACT_APP_IS_DEVELOP', process.env.REACT_APP_IS_DEVELOP);
+    console.log("process.env.REACT_APP_IS_DEVELOP", process.env.REACT_APP_IS_DEVELOP);
     const isDevApp = process.env.REACT_APP_IS_DEVELOP;
-    if(siteData.data.ipcheck && !isDevApp){
-      return { success: false, ipBlocked: true, message: "您所在地区无法支援..", };
+    if (siteData.data.ipcheck && !isDevApp) {
+      return { success: false, ipBlocked: true, message: "您所在地区无法支援.." };
     }
 
     //判斷版本是否需要更新
     let isHaveNewVersion = await checkIsHaveNewVersion(siteData.data);
 
-    if(isHaveNewVersion){
-      return { success: false, isHaveNewVersion: true, message: "有新版本，请更新", };
+    if (isHaveNewVersion) {
+      return { success: false, isHaveNewVersion: true, message: "有新版本，请更新" };
     }
 
     //初始video categories資料
     const categoriesData = await getVideoCategories();
-    if(categoriesData.result === 'fail' || !categoriesData.data){
-      return { success: false, message: categoriesData.message!,};
+    if (categoriesData.result === "fail" || !categoriesData.data) {
+      return { success: false, message: categoriesData.message! };
     }
-    
+
     const categories = categoriesData.data;
     //初始video categories sub資料
-    categories.forEach(async (category:ifCategoryItem) => {
-      if(category.has_sub){
+    categories.forEach(async (category: ifCategoryItem) => {
+      if (category.has_sub) {
         const subCategoriesData = await getVideoCategoriesSub(category.CHID);
-        if(subCategoriesData.result === 'success' && subCategoriesData.data){
+        if (subCategoriesData.result === "success" && subCategoriesData.data) {
           category.subCategories = subCategoriesData.data;
-        }   
+        }
       }
     });
     setCategories(categories);
 
     //初始game categories資料
     const gameCategoriesData = await getGameCategories();
-    if(gameCategoriesData.result === 'fail' || !gameCategoriesData.data){
-      return { success: false, message: gameCategoriesData.message!,};
+    if (gameCategoriesData.result === "fail" || !gameCategoriesData.data) {
+      return { success: false, message: gameCategoriesData.message! };
     }
     setGameCategories(gameCategoriesData.data);
 
@@ -140,14 +126,14 @@ const InitData: React.FC = () => {
     await checkLogin();
 
     //初始完成
-    return { success: true, message: "初始化成功", };
+    return { success: true, message: "初始化成功" };
   };
 
   const { data, error, isLoading } = useSWR("initData", fetcher, {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
     dedupingInterval: API_DEDUPING_INTERVAL, // 1小時 = 3600000毫秒
-    revalidateIfStale: false
+    revalidateIfStale: false,
   });
 
   const [countdown, setCountdown] = useState(pInitCountDownSec);
@@ -222,7 +208,7 @@ const InitData: React.FC = () => {
   const progressStyle = {
     width: "30px",
     height: "30px",
-    color: 'white',
+    color: "white",
     "& .MuiCircularProgress-circle": {
       strokeWidth: 3,
     },
@@ -249,11 +235,11 @@ const InitData: React.FC = () => {
   const ads = useMemo(() => {
     return (
       <>
-        <CosAdIFrame adType="APP_FULL_AD_UP" width={adWidth} pageName={'initData'} />
-        {window.innerHeight > 700 ? <br></br>:""}
-        <CosAdIFrame adType="APP_FULL_AD_down" width={adWidth} pageName={'initData'} />
-        {window.innerHeight > 700 ? <br></br>:""}
-        <CosAdIFrame adType="APP_FULL_AD_over_down" width={adWidth} pageName={'initData'} />
+        <CosAdIFrame adType="APP_FULL_AD_UP" width={adWidth} pageName={"initData"} />
+        {window.innerHeight > 700 ? <br></br> : ""}
+        <CosAdIFrame adType="APP_FULL_AD_down" width={adWidth} pageName={"initData"} />
+        {window.innerHeight > 700 ? <br></br> : ""}
+        <CosAdIFrame adType="APP_FULL_AD_over_down" width={adWidth} pageName={"initData"} />
       </>
     );
   }, [adWidth]); // 依賴 adWidth，當螢幕高度變化時重新計算
@@ -273,8 +259,8 @@ const InitData: React.FC = () => {
 
   const showError = () => {
     return (
-      <Typography color="error" variant="h6" sx={{padding: "20px",fontSize: "26px"}}>
-        發生錯誤：{error?.message ?? '未知錯誤'}
+      <Typography color="error" variant="h6" sx={{ padding: "20px", fontSize: "26px" }}>
+        發生錯誤：{error?.message ?? "未知錯誤"}
       </Typography>
     );
   };
@@ -290,8 +276,11 @@ const InitData: React.FC = () => {
           width: "100%",
         }}
       >
-        <Typography variant="h6" sx={{padding: "20px",fontSize: "26px", color: "rgb(255, 140, 255)"}}>
-         您所在地区无法支援..
+        <Typography
+          variant="h6"
+          sx={{ padding: "20px", fontSize: "26px", color: "rgb(255, 140, 255)" }}
+        >
+          您所在地区无法支援..
         </Typography>
       </Box>
     );
@@ -299,7 +288,7 @@ const InitData: React.FC = () => {
 
   const showNewVersion = () => {
     return (
-      <Typography color="error" variant="h6" sx={{padding: "20px",fontSize: "26px"}}>
+      <Typography color="error" variant="h6" sx={{ padding: "20px", fontSize: "26px" }}>
         有新版本，請更新
       </Typography>
     );
@@ -310,7 +299,7 @@ const InitData: React.FC = () => {
       <Paper sx={paperStyle}>
         <Box sx={loadingStyle}>
           {showCloseButton ? (
-            <IconButton onClick={handleClose} sx={closeButtonStyle} aria-label="close" >
+            <IconButton onClick={handleClose} sx={closeButtonStyle} aria-label="close">
               <CloseIcon />
             </IconButton>
           ) : (
@@ -329,7 +318,7 @@ const InitData: React.FC = () => {
                   sx={{
                     color: cMainColor,
                     fontWeight: "bold",
-                    transition: 'all 0.25s ease-in-out',
+                    transition: "all 0.25s ease-in-out",
                   }}
                 >
                   {countdown}
@@ -355,7 +344,7 @@ const InitData: React.FC = () => {
 
   return (
     <BaseMotionDiv>
-      <Box sx={{height:10}}/>
+      <Box sx={{ height: 10 }} />
       <Box sx={containerStyle}>
         {isLoading && showIniting()}
         {error && showError()}
@@ -363,7 +352,7 @@ const InitData: React.FC = () => {
         {!isLoading && !data?.ipBlocked && !data?.isHaveNewVersion && showSuccess()}
         {data?.isHaveNewVersion && showNewVersion()}
         {!data?.ipBlocked && !data?.isHaveNewVersion && ads}
-        {data && data?.isHaveNewVersion && <CosNewVersion open={true} onCancel={()=>{}} />}
+        {data && data?.isHaveNewVersion && <CosNewVersion open={true} onCancel={() => {}} />}
       </Box>
     </BaseMotionDiv>
   );

@@ -12,11 +12,7 @@ interface SearchTopBarProps {
   onSearch?: (type: string, text: string) => void;
 }
 
-const SearchTopBar: React.FC<SearchTopBarProps> = ({
-  selectType = "video",
-  backUrl,
-  onSearch,
-}) => {
+const SearchTopBar: React.FC<SearchTopBarProps> = ({ selectType = "video", backUrl, onSearch }) => {
   const navigate = useNavigate();
   //const location = useLocation();
   const [searchType, setSearchType] = useState(selectType);

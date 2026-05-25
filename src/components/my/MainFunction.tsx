@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { Box, Button, Typography } from '@mui/material';
-import Diversity3Icon from '@mui/icons-material/Diversity3';
-import DraftsIcon from '@mui/icons-material/Drafts';
-import QuizIcon from '@mui/icons-material/Quiz';
-import PrivacyTipIcon from '@mui/icons-material/PrivacyTip';
-import { useNavigate } from 'react-router-dom';
-import CosCheckIsLogin from '../base/check/CosCheckIsLogin';
-import { checkIsLogin } from '../../Shared/function/AccountFunction';
+import React, { useState } from "react";
+import { Box, Button, Typography } from "@mui/material";
+import Diversity3Icon from "@mui/icons-material/Diversity3";
+import DraftsIcon from "@mui/icons-material/Drafts";
+import QuizIcon from "@mui/icons-material/Quiz";
+import PrivacyTipIcon from "@mui/icons-material/PrivacyTip";
+import { useNavigate } from "react-router-dom";
+import CosCheckIsLogin from "../base/check/CosCheckIsLogin";
+import { checkIsLogin } from "../../Shared/function/AccountFunction";
 
 const iconStyle = {
   width: 30,
@@ -23,17 +23,17 @@ const MainFunction: React.FC<MainFunctionProps> = ({ width }) => {
   const iconButtonStyle = {
     width: currentWidth - 40,
     height: 60,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-start",
     gap: 1,
-    color: 'white',
-    border: '1px solid #666666',
-    '&:hover': {
-      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    color: "white",
+    border: "1px solid #666666",
+    "&:hover": {
+      backgroundColor: "rgba(255, 255, 255, 0.1)",
     },
-    padding: '0 20px',
-    textTransform: 'none',
+    padding: "0 20px",
+    textTransform: "none",
   };
   const navigate = useNavigate();
 
@@ -41,7 +41,7 @@ const MainFunction: React.FC<MainFunctionProps> = ({ width }) => {
 
   const onFeedbackClick = () => {
     if (checkIsLogin()) {
-      navigate('/my/feedback');
+      navigate("/my/feedback");
     } else {
       setCheckIsLoginOpen(true);
     }
@@ -50,12 +50,12 @@ const MainFunction: React.FC<MainFunctionProps> = ({ width }) => {
   return (
     <Box
       sx={{
-        display: 'flex',
-        flexDirection: 'column',
+        display: "flex",
+        flexDirection: "column",
         gap: 2,
-        color: 'white',
-        alignItems: 'center',
-        padding: '10px 20px',
+        color: "white",
+        alignItems: "center",
+        padding: "10px 20px",
       }}
     >
       {/*
@@ -72,7 +72,7 @@ const MainFunction: React.FC<MainFunctionProps> = ({ width }) => {
         startIcon={<Diversity3Icon sx={iconStyle} />}
         sx={iconButtonStyle}
         fullWidth
-        onClick={() => navigate('/my/swp/advertise')}
+        onClick={() => navigate("/my/swp/advertise")}
       >
         <Typography sx={{ fontSize: 20 }}>刊登广告</Typography>
       </Button>
@@ -81,7 +81,7 @@ const MainFunction: React.FC<MainFunctionProps> = ({ width }) => {
         startIcon={<QuizIcon sx={iconStyle} />}
         sx={iconButtonStyle}
         fullWidth
-        onClick={() => navigate('/my/swp/faq')}
+        onClick={() => navigate("/my/swp/faq")}
       >
         <Typography sx={{ fontSize: 20 }}>常见问题</Typography>
       </Button>
@@ -99,7 +99,7 @@ const MainFunction: React.FC<MainFunctionProps> = ({ width }) => {
         startIcon={<PrivacyTipIcon sx={iconStyle} />}
         sx={iconButtonStyle}
         fullWidth
-        onClick={() => navigate('/my/swp/privacy')}
+        onClick={() => navigate("/my/swp/privacy")}
       >
         <Typography sx={{ fontSize: 20 }}>隐私政策&使用者条款</Typography>
       </Button>

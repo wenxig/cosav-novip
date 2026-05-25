@@ -16,13 +16,8 @@ function CosForgetPwdPage() {
   const [email, setEmail] = useState("");
 
   const [msg, setMsg] = useState("");
-  const [msgType, setMsgType] = useState<
-    "error" | "success" | "info" | "warning"
-  >("info");
-  const setShowMsg = (
-    msg: string,
-    msgType: "error" | "success" | "info" | "warning"
-  ) => {
+  const [msgType, setMsgType] = useState<"error" | "success" | "info" | "warning">("info");
+  const setShowMsg = (msg: string, msgType: "error" | "success" | "info" | "warning") => {
     setMsg(msg);
     setMsgType(msgType);
   };
@@ -84,19 +79,12 @@ function CosForgetPwdPage() {
             inputType="email"
           />
 
-          <Typography
-            variant="h6"
-            sx={{ color: "white", fontSize: 16, textAlign: "center" }}
-          >
+          <Typography variant="h6" sx={{ color: "white", fontSize: 16, textAlign: "center" }}>
             请输入注册时的Email，系统将会发送密码至您的Email信箱
           </Typography>
 
           {/* 登入按鈕 */}
-          <CosButton
-            text="发送"
-            onClick={handleToggleConfirmPassword}
-            background={cMainColor}
-          />
+          <CosButton text="发送" onClick={handleToggleConfirmPassword} background={cMainColor} />
         </CosWhiteCardBox>
         {/* 建立一個間距讓元件往上移動 */}
         <Box sx={{ height: 50 }} />

@@ -1,6 +1,6 @@
-import { clearUserInfo } from '../../../data/DataCenter';
-import { checkIsVip } from '../../../Shared/function/AccountFunction';
-import CosConfirmDialog from '../CosConfirmDialog';
+import { clearUserInfo } from "../../../data/DataCenter";
+import { checkIsVip } from "../../../Shared/function/AccountFunction";
+import CosConfirmDialog from "../CosConfirmDialog";
 //import { useNavigate } from 'react-router-dom';
 
 interface CosCheckIsLoginProps {
@@ -9,13 +9,11 @@ interface CosCheckIsLoginProps {
   redirectUrl?: string;
 }
 
-
 const CosRepeatedLogin: React.FC<CosCheckIsLoginProps> = ({
   open,
   onClose,
-  redirectUrl = '/home'
+  redirectUrl = "/home",
 }) => {
-
   //const navigate = useNavigate();
 
   const handleClose = async () => {
@@ -25,7 +23,7 @@ const CosRepeatedLogin: React.FC<CosCheckIsLoginProps> = ({
     setTimeout(() => {
       window.location.reload();
     }, 100);
-  }
+  };
 
   /*
   useEffect(() => {
@@ -35,7 +33,7 @@ const CosRepeatedLogin: React.FC<CosCheckIsLoginProps> = ({
   }, [open,onLoginedAction]);
 */
 
-  if(!open || checkIsVip()){
+  if (!open || checkIsVip()) {
     return null;
   }
 
@@ -52,4 +50,4 @@ const CosRepeatedLogin: React.FC<CosCheckIsLoginProps> = ({
   );
 };
 
-export default CosRepeatedLogin; 
+export default CosRepeatedLogin;

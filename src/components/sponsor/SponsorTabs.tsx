@@ -1,8 +1,8 @@
-import React from 'react';
-import { Box, Button } from '@mui/material';
-import { cMainColor } from '../../data/ColorDef';
+import React from "react";
+import { Box, Button } from "@mui/material";
+import { cMainColor } from "../../data/ColorDef";
 
-type SponsorTabType = 'monthly' | 'download';
+type SponsorTabType = "monthly" | "download";
 
 interface SponsorTabsProps {
   activeTab: SponsorTabType;
@@ -13,20 +13,19 @@ function SponsorTabs({ activeTab, onChange }: SponsorTabsProps) {
   return (
     <Box
       sx={{
-        display: 'flex',
-        width: '100%',
-        backgroundColor: '#2b2b2b',
+        display: "flex",
+        width: "100%",
+        backgroundColor: "#2b2b2b",
       }}
     >
       <Button
-        onClick={() => onChange('monthly')}
+        onClick={() => onChange("monthly")}
         sx={{
           flex: 1,
-          borderRadius: '4px',
-          color: 'white',
-          fontSize: '18px',
-          backgroundColor:
-            activeTab === 'monthly' ? `${cMainColor}` : 'transparent',
+          borderRadius: "4px",
+          color: "white",
+          fontSize: "18px",
+          backgroundColor: activeTab === "monthly" ? `${cMainColor}` : "transparent",
         }}
       >
         包月方案

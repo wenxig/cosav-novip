@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "jsx": "react-jsx",
-    "lib": [
-      "ESNext",
-      "DOM",
-      "DOM.Iterable"
-    ],
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "strict": true,
     "target": "ESNext",
     "useDefineForClassFields": true,
@@ -25,12 +21,8 @@
     "noImplicitAny": true,
     "noImplicitOverride": true,
     "noImplicitThis": true,
-    "paths": {
-    },
-    "types": [
-    ],
+    "paths": {},
+    "types": []
   },
-  "include": [
-    "./src/**/*"
-  ]
+  "include": ["./src/**/*"]
 }
